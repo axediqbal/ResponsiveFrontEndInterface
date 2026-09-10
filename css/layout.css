@@ -275,14 +275,20 @@ body.blueprint-mode-active footer::after {
    MOBILE & LAPTOP RESPONSIVE LAYOUT OPTIMIZATIONS
    ========================================================================= */
 
-/* --- All Phones & Small Tablets (up to 768px) --- */
-@media (max-width: 768px) {
+/* --- Sidebar: hide below desktop (1024px) --- */
+@media (max-width: 1023px) {
   .sidebar-dock {
     display: none;
   }
 
   .app-layout-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* --- All Phones & Small Tablets (up to 768px) --- */
+@media (max-width: 768px) {
+  .app-layout-grid {
     gap: var(--space-md);
     padding-inline: 0.75rem;
     padding-block: var(--space-sm) var(--space-xl);
