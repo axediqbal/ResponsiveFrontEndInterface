@@ -1,0 +1,198 @@
+/* ==========================================================================
+   DECODELABS PROJECT 1: DESIGN TOKENS & CSS VARIABLES (2026 ARCHITECTURE)
+   ========================================================================== */
+
+:root {
+  /* -------------------------------------------------------------------------
+     DecodeLabs 2025/2026 Palette (Mocha Mousse + Ethereal Blue + Moonlit Grey)
+     ------------------------------------------------------------------------- */
+  --color-mocha-50: #fbf7f4;
+  --color-mocha-100: #f4eae2;
+  --color-mocha-200: #e7d2c3;
+  --color-mocha-300: #d4b49e;
+  --color-mocha-400: #be9279;
+  --color-mocha-500: #a5856f; /* Primary Warmth Anchor (#A5856F) */
+  --color-mocha-600: #8c6a54;
+  --color-mocha-700: #71523f;
+  --color-mocha-800: #543c2e;
+  --color-mocha-900: #38271e;
+
+  --color-ethereal-50: #f0f9fb;
+  --color-ethereal-100: #dcf1f6;
+  --color-ethereal-200: #bde3ed;
+  --color-ethereal-300: #a0d4e0; /* Ethereal Blue Trust (#A0D4E0) */
+  --color-ethereal-400: #6abccf;
+  --color-ethereal-500: #3e9eb5;
+  --color-ethereal-600: #297f96;
+  --color-ethereal-700: #21667a;
+  --color-ethereal-800: #1c5262;
+  --color-ethereal-900: #194451;
+
+  --color-moonlit-bg: #f2f0ea;  /* Moonlit Grey Refinement (#F2F0EA) */
+  --color-moonlit-card: #faf9f6;
+  --color-accent-amber: #f59e0b;
+  --color-accent-emerald: #10b981;
+  --color-accent-indigo: #6366f1;
+  --color-accent-rose: #f43f5e;
+
+  /* -------------------------------------------------------------------------
+     Active Theme Custom Properties (Defaults: Deep Cyber Void / Liquid Dark)
+     ------------------------------------------------------------------------- */
+  --bg-primary: #0a0e17;
+  --bg-secondary: #0f1626;
+  --bg-tertiary: #162035;
+  --bg-surface: rgba(18, 27, 44, 0.7);
+  --bg-surface-hover: rgba(28, 41, 67, 0.85);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #8493a8;
+  --text-inverse: #0f172a;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(160, 212, 224, 0.22);
+  --border-glass-hover: rgba(160, 212, 224, 0.5);
+  --border-mocha: rgba(165, 133, 111, 0.35);
+
+  --accent-primary: #a0d4e0;
+  --accent-secondary: #a5856f;
+  --accent-glow: rgba(160, 212, 224, 0.35);
+  --mocha-glow: rgba(165, 133, 111, 0.3);
+
+  /* -------------------------------------------------------------------------
+     Liquid Glass & Glassmorphism 2.0 Tokens
+     ------------------------------------------------------------------------- */
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-bg-elevated: rgba(23, 37, 66, 0.75);
+  --glass-blur: blur(20px);
+  --glass-blur-deep: blur(36px);
+  --glass-saturate: saturate(180%);
+  --glass-specular: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  --glass-border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.03) 100%);
+  --glass-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5), 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+  --glass-shadow-hover: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(160, 212, 224, 0.25);
+
+  /* -------------------------------------------------------------------------
+     Fluid Clamp Typography Scales (Mobile-First to Desktop Scale)
+     ------------------------------------------------------------------------- */
+  --font-headline: 'Outfit', 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  --text-xs: clamp(0.72rem, 0.68rem + 0.2vw, 0.82rem);
+  --text-sm: clamp(0.85rem, 0.8rem + 0.25vw, 0.95rem);
+  --text-base: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  --text-lg: clamp(1.15rem, 1.05rem + 0.5vw, 1.35rem);
+  --text-xl: clamp(1.35rem, 1.2rem + 0.8vw, 1.75rem);
+  --text-2xl: clamp(1.75rem, 1.5rem + 1.2vw, 2.35rem);
+  --text-3xl: clamp(2.2rem, 1.8rem + 2vw, 3.2rem);
+  --text-4xl: clamp(2.8rem, 2.2rem + 3vw, 4.4rem);
+  --text-hero: clamp(3.2rem, 2.5rem + 4.5vw, 5.8rem);
+
+  /* -------------------------------------------------------------------------
+     Fluid Spacing & Grid Tokens
+     ------------------------------------------------------------------------- */
+  --space-2xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.375rem);
+  --space-xs: clamp(0.5rem, 0.4rem + 0.4vw, 0.75rem);
+  --space-sm: clamp(0.75rem, 0.65rem + 0.5vw, 1rem);
+  --space-md: clamp(1rem, 0.85rem + 0.8vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  --space-xl: clamp(2rem, 1.6rem + 2vw, 3.5rem);
+  --space-2xl: clamp(3rem, 2.4rem + 3vw, 5rem);
+  --space-3xl: clamp(4.5rem, 3.5rem + 5vw, 8rem);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  --container-max: 1360px;
+  --container-narrow: 1040px;
+
+  /* -------------------------------------------------------------------------
+     Transitions & Motion
+     ------------------------------------------------------------------------- */
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 180ms;
+  --duration-normal: 320ms;
+  --duration-slow: 550ms;
+
+  /* -------------------------------------------------------------------------
+     Z-index Hierarchy
+     ------------------------------------------------------------------------- */
+  --z-bg: 0;
+  --z-base: 10;
+  --z-card: 20;
+  --z-dock: 40;
+  --z-navbar: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+  --z-cursor: 500;
+}
+
+/* ==========================================================================
+   THEME PALETTES: WARM EARTH REFINEMENT (Decodelabs PDF Spec)
+   ========================================================================== */
+[data-theme="warm-earth"] {
+  --bg-primary: #f5f2eb;
+  --bg-secondary: #ece7dc;
+  --bg-tertiary: #dfd8cb;
+  --bg-surface: rgba(255, 255, 255, 0.78);
+  --bg-surface-hover: rgba(255, 255, 255, 0.95);
+
+  --text-primary: #2d241e;
+  --text-secondary: #56473d;
+  --text-muted: #827265;
+  --text-inverse: #ffffff;
+
+  --border-subtle: rgba(165, 133, 111, 0.16);
+  --border-glass: rgba(165, 133, 111, 0.3);
+  --border-glass-hover: rgba(165, 133, 111, 0.6);
+  --border-mocha: rgba(165, 133, 111, 0.5);
+
+  --accent-primary: #297f96;
+  --accent-secondary: #8c6a54;
+  --accent-glow: rgba(41, 127, 150, 0.25);
+  --mocha-glow: rgba(140, 106, 84, 0.25);
+
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.85);
+  --glass-specular: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+  --glass-border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(165, 133, 111, 0.2) 100%);
+  --glass-shadow: 0 12px 35px -10px rgba(140, 106, 84, 0.15), 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  --glass-shadow-hover: 0 20px 45px -10px rgba(140, 106, 84, 0.22), 0 0 20px rgba(41, 127, 150, 0.2);
+}
+
+/* ==========================================================================
+   THEME PALETTES: ETHEREAL LIGHT (Frosted Crystal Spec)
+   ========================================================================== */
+[data-theme="ethereal-light"] {
+  --bg-primary: #f0f7f9;
+  --bg-secondary: #e2f0f4;
+  --bg-tertiary: #d2e7ec;
+  --bg-surface: rgba(255, 255, 255, 0.8);
+  --bg-surface-hover: rgba(255, 255, 255, 0.98);
+
+  --text-primary: #132b35;
+  --text-secondary: #2f5361;
+  --text-muted: #5e8291;
+  --text-inverse: #ffffff;
+
+  --border-subtle: rgba(62, 158, 181, 0.16);
+  --border-glass: rgba(62, 158, 181, 0.32);
+  --border-glass-hover: rgba(62, 158, 181, 0.65);
+
+  --accent-primary: #1c738c;
+  --accent-secondary: #a5856f;
+  --accent-glow: rgba(28, 115, 140, 0.28);
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg-elevated: rgba(255, 255, 255, 0.9);
+  --glass-specular: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.85) 0%, transparent 70%);
+  --glass-border-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(62, 158, 181, 0.25) 100%);
+  --glass-shadow: 0 12px 35px -10px rgba(28, 82, 98, 0.12), 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  --glass-shadow-hover: 0 20px 45px -10px rgba(28, 82, 98, 0.2), 0 0 20px rgba(28, 115, 140, 0.22);
+}
