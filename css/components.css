@@ -1259,6 +1259,85 @@
     font-size: var(--text-xs);
     padding: 10px 14px;
   }
+
+  /* === Deep Mobile Fixes: Inline-Style Overrides === */
+
+  /* Simulator inner mini-app grid: force stack */
+  .frame-content [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Simulator inner header bar wrap */
+  .frame-content [style*="justify-content: space-between"] {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  .frame-content [style*="font-size: var(--text-sm)"] {
+    font-size: 0.72rem !important;
+  }
+
+  .frame-content .glass-card {
+    padding: 8px !important;
+  }
+
+  .frame-content .glass-card h4 {
+    font-size: 0.78rem !important;
+  }
+
+  .frame-content .glass-card p {
+    font-size: 0.68rem !important;
+  }
+
+  /* Roadmap step: inner flex area wraps cleanly */
+  .step-card-header > div[style*="display: flex"] {
+    gap: 8px !important;
+    min-width: 0;
+  }
+
+  .step-card-header > div[style*="display: flex"] > div {
+    min-width: 0;
+  }
+
+  .step-card-header span[style*="font-size: var(--text-xs)"] {
+    font-size: 0.68rem !important;
+    line-height: 1.4;
+    display: block;
+    word-break: break-word;
+  }
+
+  /* Badge action buttons: stack vertically */
+  .badge-portal-wrapper [style*="display: flex; gap: var(--space-sm)"] {
+    flex-direction: column !important;
+  }
+
+  .badge-portal-wrapper [style*="flex: 1"] {
+    flex: none !important;
+    width: 100% !important;
+  }
+
+  /* Pillar cards: note boxes get tighter padding */
+  .content-article [style*="padding: 12px"] {
+    padding: 8px !important;
+    font-size: 0.7rem !important;
+  }
+
+  /* Vault heading sizes on mobile */
+  .vault-resource-card h4 {
+    font-size: var(--text-base) !important;
+  }
+
+  /* Select dropdown fix */
+  .input-glass[style*="background"] {
+    appearance: auto;
+    -webkit-appearance: auto;
+  }
+
+  /* Footer brand row */
+  .footer-brand [style*="display: flex; align-items: center"] {
+    gap: 6px !important;
+  }
 }
 
 /* ---- Medium Phones (481px to 767px) ---- */
