@@ -944,8 +944,23 @@
    COMPREHENSIVE MOBILE & LAPTOP RESPONSIVE OPTIMIZATIONS
    ========================================================================== */
 
-/* ---- Small Phones (up to 480px) ---- */
-@media (max-width: 480px) {
+/* ---- All Phones & Small Tablets (up to 768px) ---- */
+@media (max-width: 768px) {
+  /* Global overflow guard */
+  .site-wrapper,
+  .app-layout-grid,
+  .main-content,
+  .section-block,
+  .hero-wrapper,
+  .hero-content,
+  .simulator-card,
+  .vscode-simulator,
+  .badge-portal-wrapper {
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
   /* Navbar: compact brand, smaller island */
   .nav-header {
     top: 8px;
@@ -989,19 +1004,33 @@
     right: 0.5rem;
   }
 
-  /* Hero: tighter spacing */
+  /* ---- HERO: critical overflow fix ---- */
   .hero-wrapper {
     padding-block: var(--space-md) var(--space-lg);
     gap: var(--space-md);
   }
 
+  .hero-content {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hero-pill-cluster {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
   .hero-title {
-    font-size: clamp(2rem, 8vw, 3.2rem);
-    line-height: 1.12;
+    font-size: clamp(1.5rem, 5.5vw, 2.2rem);
+    line-height: 1.15;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .hero-desc {
     font-size: var(--text-sm);
+    max-width: 100%;
   }
 
   .hero-actions {
@@ -1340,60 +1369,6 @@
   }
 }
 
-/* ---- Medium Phones (481px to 767px) ---- */
-@media (min-width: 481px) and (max-width: 767px) {
-  .nav-header {
-    top: 10px;
-  }
-
-  .nav-island {
-    padding: 0.5rem 1rem;
-  }
-
-  .hero-title {
-    font-size: clamp(2.4rem, 7vw, 3.5rem);
-  }
-
-  .hero-stats-strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .simulator-stage {
-    min-height: 340px;
-    padding: var(--space-md);
-  }
-
-  .shortcut-buttons-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .roadmap-progress-container {
-    flex-wrap: wrap;
-    gap: var(--space-sm);
-    justify-content: center;
-  }
-
-  .progress-bar-track {
-    flex-basis: 100%;
-    order: 3;
-    margin-inline: 0;
-    margin-top: var(--space-xs);
-  }
-
-  .badge-interactive-card {
-    max-width: 380px;
-  }
-
-  .floating-dock-tray {
-    bottom: 16px;
-    right: 16px;
-  }
-
-  .toast-container {
-    right: 16px;
-    left: auto;
-    max-width: 300px;
-  }
 }
 
 /* ---- Tablets & Small Laptops (768px to 1023px) ---- */

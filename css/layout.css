@@ -275,24 +275,16 @@ body.blueprint-mode-active footer::after {
    MOBILE & LAPTOP RESPONSIVE LAYOUT OPTIMIZATIONS
    ========================================================================= */
 
-/* --- Hide sidebar dock below 1024px (stacks to single column) --- */
-@media (max-width: 1023px) {
+/* --- All Phones & Small Tablets (up to 768px) --- */
+@media (max-width: 768px) {
   .sidebar-dock {
     display: none;
   }
 
   .app-layout-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-lg);
-    padding-block: var(--space-md) var(--space-2xl);
-  }
-}
-
-/* --- Small phones (up to 480px) --- */
-@media (max-width: 480px) {
-  .app-layout-grid {
-    padding-inline: 0.75rem;
     gap: var(--space-md);
+    padding-inline: 0.75rem;
     padding-block: var(--space-sm) var(--space-xl);
   }
 
@@ -326,25 +318,8 @@ body.blueprint-mode-active footer::after {
   }
 }
 
-/* --- Tablets (481px to 767px) --- */
-@media (min-width: 481px) and (max-width: 767px) {
-  .app-layout-grid {
-    padding-inline: 1.25rem;
-  }
-
-  .section-header .section-title {
-    font-size: var(--text-2xl);
-  }
-
-  .grid-3col {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
-  }
-}
-
-/* --- Laptop screens (768px to 1279px) --- */
-@media (min-width: 768px) and (max-width: 1279px) {
+/* --- Laptop screens (769px to 1279px) --- */
+@media (min-width: 769px) and (max-width: 1279px) {
   .section-header .section-title {
     font-size: clamp(1.8rem, 2vw + 1rem, 2.6rem);
   }
