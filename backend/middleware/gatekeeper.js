@@ -5,7 +5,16 @@
  * 2. Semantic Validation: Logical coherence and business domain constraints.
  */
 
-const VALID_TIERS = ['Bronze', 'Silver', 'Gold', 'Platinum'];
+const VALID_TIERS = [
+  'Bronze', 'Silver', 'Gold', 'Platinum',
+  'Full Stack Architect (Level 1)',
+  'Frontend Craft Specialist',
+  'UI/UX Responsive Master',
+  'Platinum • Full Stack Architect (Level 1)',
+  'Gold • Frontend Craft Specialist',
+  'Silver • UI/UX Responsive Master',
+  'Bronze • Apprentice Operative'
+];
 
 /**
  * Gatekeeper validator for Qualification Badge submissions (POST / PUT)
@@ -53,12 +62,15 @@ export function validateBadgePayload(req, res, next) {
         type: 'SyntacticError',
         message: 'Field "tier" must be a string if provided.'
       });
-    } else if (!VALID_TIERS.includes(tier)) {
-      errors.push({
-        field: 'tier',
-        type: 'SemanticError',
-        message: `Invalid qualification tier "${tier}". Permitted tiers: ${VALID_TIERS.join(', ')}.`
-      });
+    } else {
+      const isPermitted = VALID_TIERS.some(t => t.toLowerCase() === tier.toLowerCase());
+      if (!isPermitted) {
+        errors.push({
+          field: 'tier',
+          type: 'SemanticError',
+          message: `Invalid qualification tier "${tier}". Permitted tiers: ${VALID_TIERS.slice(0, 4).join(', ')} or specialization tracks.`
+        });
+      }
     }
   }
 
