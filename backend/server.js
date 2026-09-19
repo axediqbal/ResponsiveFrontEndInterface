@@ -53,13 +53,17 @@ app.use(notFoundHandler);
 app.use(globalErrorHandler);
 
 // 6. Bootstrap Server
-app.listen(PORT, () => {
-  console.log('\n' + '='.repeat(60));
-  console.log('⚡ \x1b[36mDecodeLabs Industrial Training Engine\x1b[0m — Batch 2026');
-  console.log('🧠 \x1b[32mProject 2: The Nervous System (RESTful API) ACTIVE\x1b[0m');
-  console.log('🌐 Local URL:      \x1b[34mhttp://localhost:' + PORT + '\x1b[0m');
-  console.log('🩺 Health API:     \x1b[34mhttp://localhost:' + PORT + '/api/system/health\x1b[0m');
-  console.log('🛡️ Badges API:     \x1b[34mhttp://localhost:' + PORT + '/api/badges\x1b[0m');
-  console.log('🧪 API Catalog:    \x1b[34mhttp://localhost:' + PORT + '/api/simulator/catalog\x1b[0m');
-  console.log('='.repeat(60) + '\n');
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log('\n' + '='.repeat(60));
+    console.log('⚡ \x1b[36mDecodeLabs Industrial Training Engine\x1b[0m — Batch 2026');
+    console.log('🧠 \x1b[32mProject 2: The Nervous System (RESTful API) ACTIVE\x1b[0m');
+    console.log('🌐 Local URL:      \x1b[34mhttp://localhost:' + PORT + '\x1b[0m');
+    console.log('🩺 Health API:     \x1b[34mhttp://localhost:' + PORT + '/api/system/health\x1b[0m');
+    console.log('🛡️ Badges API:     \x1b[34mhttp://localhost:' + PORT + '/api/badges\x1b[0m');
+    console.log('🧪 API Catalog:    \x1b[34mhttp://localhost:' + PORT + '/api/simulator/catalog\x1b[0m');
+    console.log('='.repeat(60) + '\n');
+  });
+}
+
+export default app;
