@@ -1,13 +1,16 @@
 {
-  "name": "restaurant-website",
-  "version": "1.0.0",
-  "description": "Responsive Frontend Website",
-  "main": "index.html",
+  "name": "decodelabs-fullstack-internship",
+  "version": "2.0.0",
+  "description": "DecodeLabs Full Stack Internship - Projects 1 & 2 (Responsive Architecture & Nervous System REST API)",
+  "main": "server/server.js",
+  "type": "module",
   "scripts": {
-    "dev": "npx -y serve . -l 5500",
-    "start": "npx -y serve . -l 5500"
+    "dev": "node server/server.js",
+    "start": "node server/server.js",
+    "test": "node scratch/test-endpoints.js"
   },
-  "devDependencies": {
-    "serve": "^14.2.4"
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
   }
 }

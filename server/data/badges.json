@@ -1,0 +1,30 @@
+[
+  {
+    "id": "DL-2026-WK1-A9F32B",
+    "internName": "Ahmed Iqbal",
+    "tier": "Platinum",
+    "projectName": "The Responsive Architecture & Nervous System",
+    "status": "Verified",
+    "issuedAt": "2026-09-19T08:30:00.000Z",
+    "skills": [
+      "HTML5 Semantics",
+      "CSS Grid Floorplans",
+      "REST API Development",
+      "IPO Modeling",
+      "Gatekeeper Validation"
+    ]
+  },
+  {
+    "id": "DL-2026-WK1-E74C18",
+    "internName": "Martina Plantijn",
+    "tier": "Gold",
+    "projectName": "Liquid Glass 2026 System",
+    "status": "Verified",
+    "issuedAt": "2026-09-18T14:15:00.000Z",
+    "skills": [
+      "CSS Glassmorphism",
+      "Micro-Interactions",
+      "API Health Monitoring"
+    ]
+  }
+]

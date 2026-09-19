@@ -125,6 +125,7 @@
   .sidebar-dock {
     position: sticky;
     top: 88px;
+    z-index: var(--z-dock, 100);
     max-height: calc(100vh - 105px);
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -298,6 +299,10 @@ body.blueprint-mode-active footer::after {
 
 /* --- All Phones & Small Tablets (up to 768px) --- */
 @media (max-width: 768px) {
+  .site-wrapper {
+    padding-bottom: calc(85px + env(safe-area-inset-bottom));
+  }
+
   .app-layout-grid {
     gap: var(--space-md);
     padding-inline: 0.75rem;

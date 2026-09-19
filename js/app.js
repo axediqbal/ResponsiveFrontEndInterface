@@ -1,6 +1,7 @@
 /**
- * DecodeLabs Project 1: Master Application Coordinator
- * Connects theme, navbar, viewport simulator, toolkit, roadmap, and glass physics.
+ * DecodeLabs Project 1 & 2: Master Application Coordinator
+ * Connects theme, navbar, viewport simulator, toolkit, roadmap,
+ * qualification ledger, retro-futurist physics, and REST API engine.
  */
 
 import { initTheme } from './theme.js';
@@ -9,6 +10,10 @@ import { initSimulator } from './simulator.js';
 import { initToolkit } from './toolkit.js';
 import { initRoadmap } from './roadmap.js';
 import { initBadge } from './badge.js';
+import { initSystemPulse } from './systemPulse.js';
+import { initApiConsole } from './apiConsole.js';
+import { initMouseScrubVideo } from './mouseScrub.js';
+import { initHeroTypewriter } from './typewriter.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Submodules
@@ -18,6 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initToolkit();
   initRoadmap();
   initBadge();
+  initSystemPulse();
+  initApiConsole();
+  initMouseScrubVideo();
+  initHeroTypewriter();
 
   // Initialize 2026 Liquid Glass Physics
   initLiquidGlassPhysics();
@@ -25,37 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Toast System
   initToastSystem();
 
-  console.log('%c🚀 DecodeLabs Project 1: Responsive Architecture Initialized', 'color: #a0d4e0; font-size: 14px; font-weight: bold;');
+  console.log(
+    '%c⚡ DecodeLabs Full-Stack Engine: Responsive Architecture & Nervous System ACTIVE',
+    'color: #a0d4e0; font-size: 14px; font-weight: bold;'
+  );
 });
 
 /**
  * Dynamic Mouse Lighting Follower & 3D Tilt Shaders
  */
 function initLiquidGlassPhysics() {
-  const mouseLight = document.querySelector('.mouse-light');
   const tiltCards = document.querySelectorAll('.glass-card, .badge-interactive-card');
-
-  // Mouse move listener for ambient follower
-  if (mouseLight && window.matchMedia('(pointer: fine)').matches) {
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let currentX = mouseX;
-    let currentY = mouseY;
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    }, { passive: true });
-
-    function animateFollower() {
-      currentX += (mouseX - currentX) * 0.1;
-      currentY += (mouseY - currentY) * 0.1;
-      mouseLight.style.left = `${currentX}px`;
-      mouseLight.style.top = `${currentY}px`;
-      requestAnimationFrame(animateFollower);
-    }
-    requestAnimationFrame(animateFollower);
-  }
 
   // 3D Tilt effect on interactive cards (desktop only — skip touch devices)
   if (window.matchMedia('(pointer: fine)').matches) {
@@ -68,10 +57,10 @@ function initLiquidGlassPhysics() {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
         
-        const rotateX = ((y - centerY) / centerY) * -7;
-        const rotateY = ((x - centerX) / centerX) * 7;
+        const rotateX = ((y - centerY) / centerY) * -5;
+        const rotateY = ((x - centerX) / centerX) * 5;
 
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px)`;
       });
 
       card.addEventListener('mouseleave', () => {

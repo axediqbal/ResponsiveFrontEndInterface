@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DecodeLabs | Project 1: The Responsive Architecture</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>DecodeLabs | Projects 1 &amp; 2: Responsive Architecture &amp; The Nervous System</title>
   
   <!-- SEO & Social Meta Tags -->
   <meta name="description" content="DecodeLabs Full Stack Internship Project 1: Mastering Responsive Layout Architecture, Liquid Glass 2026 aesthetics, semantic HTML5, CSS Grid floor-plans, and WCAG accessibility standards.">
@@ -16,10 +16,12 @@
   <meta property="og:description" content="A Strategic Execution Framework for Full-Stack Interns at DecodeLabs.">
   <meta property="og:type" content="website">
 
-  <!-- Typography: Google Fonts (Outfit, Plus Jakarta Sans, JetBrains Mono) -->
+  <!-- Typography: Google Fonts & Helvetica Now Display -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/5ac3fe7c6abd2f62067f266d89671492?family=HelveticaNowDisplay-Medium" type="text/css" />
+  <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/1aa3377e489837a26d019bba501e779d?family=HelveticaNowDisplayW01-Rg" type="text/css" />
 
   <!-- Modular CSS Architecture -->
   <link rel="stylesheet" href="css/variables.css">
@@ -32,13 +34,26 @@
   <!-- Keyboard Navigation Accessibility Skip Link -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Dynamic Ambient Orbs & Mouse Refraction Light -->
+  <!-- 2026 Live Cinematic Ambient Video Background -->
+  <video
+    id="retro-bg-video"
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260411_104032_69319010-2458-492b-b04d-b40a5dfa4482.mp4"
+    autoplay
+    loop
+    muted
+    playsinline
+    preload="auto"
+    class="retro-background-video"
+    aria-hidden="true"
+  ></video>
+  <div class="video-vignette-overlay" aria-hidden="true"></div>
+
+  <!-- Dynamic Ambient Canvas -->
   <div class="ambient-canvas" aria-hidden="true">
     <div class="ambient-orb orb-1"></div>
     <div class="ambient-orb orb-2"></div>
     <div class="ambient-orb orb-3"></div>
   </div>
-  <div class="mouse-light" aria-hidden="true"></div>
 
   <!-- =========================================================================
        HEADER & DYNAMIC ISLAND NAVIGATION (HTML5 Landmark: <header> & <nav>)
@@ -51,8 +66,8 @@
           <span>DL</span>
         </div>
         <div class="brand-info">
-          <span class="brand-title">DecodeLabs <span class="badge-mini">Project 1</span></span>
-          <span class="brand-sub">Full Stack Internship • 2026</span>
+          <span class="brand-title">DecodeLabs® <span class="badge-mini">Projects 1 &amp; 2</span></span>
+          <span class="brand-sub">Full Stack Internship • Batch 2026</span>
         </div>
       </a>
 
@@ -64,6 +79,7 @@
         <li><a href="#toolkit" class="nav-item-link">Survival Vault</a></li>
         <li><a href="#roadmap" class="nav-item-link">Roadmap</a></li>
         <li><a href="#badge" class="nav-item-link">Badge Portal</a></li>
+        <li><a href="#nervous-system" class="nav-item-link" style="color:var(--color-ethereal-300);">The Nerves (API)</a></li>
       </ul>
 
       <!-- Action Controls -->
@@ -100,6 +116,7 @@
         <a href="#toolkit" class="mobile-nav-link">Survival Vault <span>→</span></a>
         <a href="#roadmap" class="mobile-nav-link">Execution Roadmap <span>→</span></a>
         <a href="#badge" class="mobile-nav-link">Qualification Badge <span>→</span></a>
+        <a href="#nervous-system" class="mobile-nav-link" style="color:var(--color-ethereal-300);">The Nervous System (API) <span>→</span></a>
       </div>
     </nav>
   </header>
@@ -185,49 +202,60 @@
            ===================================================================== -->
       <main class="main-content" id="main-content">
 
-        <!-- 1. HERO SECTION -->
+        <!-- 1. HERO SECTION & RETRO-FUTURIST INTERFACE AGENT (A.R.I.A) -->
         <section id="hero" class="hero-wrapper" aria-labelledby="hero-title">
           <div class="hero-content">
-            <div class="hero-pill-cluster">
-              <span class="glass-pill">
-                <span class="status-dot"></span>
-                Industrial Training Kit • Batch 2026
-              </span>
+            <!-- Blurred Intro Badge (A.R.I.A) -->
+            <div class="blurred-intro-badge" aria-hidden="true">
+              Hey there, meet A.R.I.A,<br />
+              DecodeLabs' Adaptive Response &amp; Nervous System Interface Agent
             </div>
 
-            <h1 id="hero-title" class="hero-title">
-              Project 1: The <span class="gradient-text">Responsive Architecture</span>
+            <!-- Main Hero Title with Dynamic Typewriter -->
+            <h1 id="hero-title" class="hero-typewriter-container">
+              <span id="hero-typewriter-text"></span>
+              <span id="hero-typewriter-cursor" class="typewriter-cursor" aria-hidden="true"></span>
             </h1>
 
             <p class="hero-desc">
-              Step into the role of a Full Stack Developer at DecodeLabs. This track isn't about fixed dimensions—it's about adaptability. Master the craft of constructing flexible, fluid frontends using pure HTML5, CSS3 Grid/Flexbox, and JavaScript.
+              DecodeLabs Full-Stack Internship Track — Batch 2026. Mastering <strong>Project 1: The Responsive Architecture</strong> (Pure Web Standards, Liquid Glass 2026) and <strong>Project 2: The Nervous System</strong> (RESTful API, Gatekeeper Validation &amp; Real-time Telemetry).
             </p>
 
-            <div class="hero-actions">
-              <a href="#simulator" class="btn-glass btn-primary">
-                Explore Live Simulator
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
+            <!-- Retro-Futurist Action Pills -->
+            <div id="hero-action-pills" class="hero-action-pills-row">
+              <a href="#nervous-system" class="action-pill-white">
+                ⚡ Explore The Nerves (API)
+              </a>
+              <a href="#simulator" class="action-pill-white">
+                📱 Device Simulator
+              </a>
+              <a href="#badge" class="action-pill-white">
+                🛡️ Claim Qualification
+              </a>
+              <a href="#roadmap" class="action-pill-white">
+                🗺️ 6-Step Roadmap
+              </a>
+              <button type="button" id="btn-copy-contact" class="action-pill-outline" title="Click to copy email address">
+                <span>Reach us: <span style="text-decoration: underline;">decodelabs.tech@gmail.com</span></span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
-              </a>
-              <a href="#toolkit" class="btn-glass">
-                Intern's Survival Vault
-              </a>
+              </button>
             </div>
 
-            <div class="hero-stats-strip">
+            <div class="hero-stats-strip" style="margin-top: var(--space-xl);">
               <div class="stat-card">
                 <span class="stat-value">100%</span>
-                <span class="stat-label">Semantic HTML5</span>
+                <span class="stat-label">Pure Web Standards</span>
               </div>
               <div class="stat-card">
-                <span class="stat-value">0 KB</span>
-                <span class="stat-label">Framework Overhead</span>
+                <span class="stat-value">REST API</span>
+                <span class="stat-label">Express Nervous System</span>
               </div>
               <div class="stat-card">
-                <span class="stat-value">6 / 6</span>
-                <span class="stat-label">Roadmap Milestones</span>
+                <span class="stat-value">Gatekeeper</span>
+                <span class="stat-label">Syntactic &amp; Semantic</span>
               </div>
               <div class="stat-card">
                 <span class="stat-value">WCAG AA</span>
@@ -716,8 +744,180 @@
               </div>
             </div>
           </div>
+
+          <!-- Verified Interns Live Ledger (Week 2 REST API Connected) -->
+          <div class="glass-card" style="margin-top: var(--space-xl); padding: var(--space-lg);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <h3 style="font-size: var(--text-base); color: var(--text-primary); margin: 0;">Verified Credentials Ledger</h3>
+                <span style="font-size: var(--text-xs); color: var(--text-muted);">Synchronized in real-time with GET /api/badges</span>
+              </div>
+              <span class="glass-pill glass-pill-mocha">REST API Synced</span>
+            </div>
+            <div id="verified-interns-list" class="verified-interns-list">
+              <p style="color:var(--color-mocha-300); font-size:13px;">Connecting to backend ledger...</p>
+            </div>
+          </div>
         </section>
 
+        <!-- 8. THE NERVOUS SYSTEM: REST API & TELEMETRY ENGINE (WEEK 2) -->
+        <section id="nervous-system" class="section-block" aria-labelledby="nervous-system-title">
+          <div class="section-header">
+            <span class="section-tag" style="border-color: var(--color-ethereal-300); color: var(--color-ethereal-300);">Project 2 • Backend Engine</span>
+            <h2 id="nervous-system-title" class="section-title">The Nervous System: RESTful API Architecture</h2>
+            <p class="section-desc">
+              Bridging frontend visuals with backend logic. Powered by Express.js, Gatekeeper blood-brain validation, autonomic rate limiting, and real-time telemetry.
+            </p>
+          </div>
+
+          <!-- System Vitals & Synaptic Pulse Monitor -->
+          <div class="nervous-vitals-grid">
+            <div class="glass-card vital-card">
+              <span class="vital-label">Nervous State</span>
+              <div id="pulse-status-text" class="vital-value" style="font-size: var(--text-base); display: flex; align-items: center; gap: 8px;">
+                <span class="status-dot" style="background:#10b981;"></span> Connecting...
+              </div>
+            </div>
+
+            <div class="glass-card vital-card">
+              <span class="vital-label">Synaptic Latency</span>
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span id="pulse-latency-badge" class="glass-pill glass-pill-ethereal">-- ms</span>
+                <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Jitter &lt; 5ms</span>
+              </div>
+            </div>
+
+            <div class="glass-card vital-card">
+              <span class="vital-label">Server Uptime</span>
+              <div id="pulse-uptime-text" class="vital-value" style="font-size: var(--text-lg); color: var(--color-ethereal-300);">
+                --
+              </div>
+            </div>
+
+            <div class="glass-card vital-card">
+              <span class="vital-label">Credentials In Vault</span>
+              <div id="pulse-badges-text" class="vital-value" style="font-size: var(--text-xl); color: var(--color-mocha-500);">
+                0
+              </div>
+            </div>
+          </div>
+
+          <!-- ECG Real-Time Synaptic Monitor -->
+          <div class="glass-card" style="padding: var(--space-md); margin-bottom: var(--space-xl);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: var(--text-xs); text-transform: uppercase; font-weight: 700; color: var(--text-muted);">
+                ⚡ Real-Time Synaptic Pulse (Heartbeat &amp; Latency Monitor)
+              </span>
+              <span class="glass-pill" style="font-size: 10px; color: #34d399; border-color: #34d399;">LIVE IPO FLOW</span>
+            </div>
+            <div class="ecg-canvas-container">
+              <canvas id="ecg-canvas" width="800" height="90" class="ecg-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Interactive REST API Sandbox Console -->
+          <div class="glass-card api-console-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+              <div>
+                <h3 style="font-size: var(--text-lg); color: var(--text-primary); margin: 0;">Interactive REST API Sandbox</h3>
+                <span style="font-size: var(--text-xs); color: var(--text-muted);">Test GET, POST, PUT, DELETE endpoints with live HTTP status codes &amp; response time</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="status-code-pill status-2xx" id="api-response-status">200 Ready</span>
+                <span class="glass-pill" id="api-response-latency" style="font-family: var(--font-mono); font-size: 11px;">0.0 ms</span>
+              </div>
+            </div>
+
+            <!-- Presets Bar -->
+            <div class="api-preset-row">
+              <label for="api-endpoint-select" style="font-size: var(--text-xs); font-weight: 700; color: var(--text-muted); white-space: nowrap;">
+                Preset Scenario:
+              </label>
+              <select id="api-endpoint-select" class="api-preset-select">
+                <option value="GET /api/system/health">GET /api/system/health — System Vitals &amp; Telemetry</option>
+                <option value="GET /api/system/pulse">GET /api/system/pulse — Real-Time Synaptic Heartbeat</option>
+                <option value="GET /api/badges">GET /api/badges — List All Verified Credentials</option>
+                <option value="POST /api/badges">POST /api/badges — Issue Badge (Gatekeeper Validated)</option>
+                <option value="GET /api/simulator/status/200">GET /api/simulator/status/200 — Status 200 OK</option>
+                <option value="GET /api/simulator/status/201">GET /api/simulator/status/201 — Status 201 Created</option>
+                <option value="GET /api/simulator/status/400">GET /api/simulator/status/400 — Status 400 Bad Request</option>
+                <option value="GET /api/simulator/status/404">GET /api/simulator/status/404 — Status 404 Not Found</option>
+                <option value="GET /api/simulator/status/429">GET /api/simulator/status/429 — Status 429 Rate Limit</option>
+                <option value="GET /api/simulator/status/500">GET /api/simulator/status/500 — Status 500 Server Error</option>
+                <option value="POST /api/simulator/echo">POST /api/simulator/echo — IPO Data Echo &amp; Latency Test</option>
+                <option value="GET /api/simulator/catalog">GET /api/simulator/catalog — OpenAPI Catalog</option>
+              </select>
+            </div>
+
+            <!-- Method + Path Bar + Send Button -->
+            <div class="api-control-bar">
+              <select id="api-method-select" class="api-method-select">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+              </select>
+              <input type="text" id="api-custom-path" class="api-path-input" value="/api/system/health" placeholder="/api/endpoint">
+              <button type="button" id="btn-send-request" class="btn-glass btn-primary" style="padding: 10px 16px; font-weight: 700;">
+                Dispatch 🚀
+              </button>
+            </div>
+
+            <!-- Payload Editor & Response Panel -->
+            <div class="api-workspace-grid">
+              <!-- Left Pane: Request Payload -->
+              <div class="api-pane">
+                <div class="api-pane-header">
+                  <span>Request JSON Body (POST / PUT)</span>
+                  <span style="font-size: 10px; color: var(--color-ethereal-300);">Client-Side Input</span>
+                </div>
+                <textarea id="api-payload-editor" class="api-payload-editor" placeholder="// Optional JSON request payload..."></textarea>
+              </div>
+
+              <!-- Right Pane: Live Response -->
+              <div class="api-pane">
+                <div class="api-pane-header">
+                  <span>Server Response (The Nervous System)</span>
+                  <span style="font-size: 10px; color: var(--color-mocha-500);">JSON / REST Payload</span>
+                </div>
+                <pre class="api-response-panel"><code id="api-response-viewer">// Click "Dispatch" to send request...</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Architecture & Security Pillars -->
+          <div class="nervous-pillars-grid">
+            <div class="glass-card nervous-feature-card">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 1.5rem;">🛡️</span>
+                <h4 style="font-size: var(--text-base); color: var(--text-primary); margin: 0;">The Gatekeeper Rule</h4>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.6;">
+                <em>"Never trust the client."</em> Dual-layer validation enforcing <strong>Syntactic formatting</strong> (data types, payload schema) and <strong>Semantic integrity</strong> (domain rules, valid credential tiers) with instant HTTP 400 rejection on violation.
+              </p>
+            </div>
+
+            <div class="glass-card nervous-feature-card">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 1.5rem;">⚡</span>
+                <h4 style="font-size: var(--text-base); color: var(--text-primary); margin: 0;">Autonomic Defense</h4>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.6;">
+                Sliding-window IP rate limiter preventing DDoS and traffic spikes. Automatically responds with <strong>HTTP 429 Too Many Requests</strong> and calculates dynamic <code>Retry-After</code> recovery headers.
+              </p>
+            </div>
+
+            <div class="glass-card nervous-feature-card">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 1.5rem;">📊</span>
+                <h4 style="font-size: var(--text-base); color: var(--text-primary); margin: 0;">IPO Telemetry &amp; Latency</h4>
+              </div>
+              <p style="font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.6;">
+                High-resolution request tracking with nanosecond precision (<code>process.hrtime</code>). Every request receives an <code>X-Response-Time</code> header to monitor system performance under load.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
 

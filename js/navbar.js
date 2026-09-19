@@ -53,21 +53,43 @@ export function initNavbar() {
     });
   }
 
-  // Sticky Island Scroll dynamics
-  const island = document.querySelector('.nav-island');
+  // Smart Scroll Navigation (Auto-hide on scroll down, reveal on scroll up)
+  const navHeader = document.querySelector('.nav-header');
   let lastScrollY = window.scrollY;
+  const scrollThreshold = 8;
 
   window.addEventListener('scroll', () => {
     const currentScrollY = window.scrollY;
-    if (island) {
-      if (currentScrollY > 60) {
-        island.style.padding = '0.5rem 1.1rem';
-        island.style.boxShadow = '0 16px 36px -8px rgba(0,0,0,0.6)';
-      } else {
-        island.style.padding = '0.65rem 1.25rem';
-        island.style.boxShadow = 'var(--glass-shadow)';
-      }
+    const delta = currentScrollY - lastScrollY;
+
+    if (!navHeader) return;
+
+    // 1. Compact / elevated state when scrolled past 25px
+    if (currentScrollY > 25) {
+      navHeader.classList.add('is-scrolled');
+    } else {
+      navHeader.classList.remove('is-scrolled');
     }
+
+    // 2. On desktop (> 768px), keep navbar ALWAYS visible at top (no auto-hide)
+    if (window.innerWidth > 768) {
+      navHeader.classList.remove('nav-hidden');
+      lastScrollY = currentScrollY;
+      return;
+    }
+
+    // 3. Mobile only (<= 768px): Do not auto-hide if mobile menu is currently open
+    const isMenuOpen = mobileMenu && mobileMenu.classList.contains('open');
+
+    // 4. Mobile Smart auto-hide on scroll down, reveal on scroll up
+    if (currentScrollY <= 40 || isMenuOpen) {
+      navHeader.classList.remove('nav-hidden');
+    } else if (delta > scrollThreshold && currentScrollY > 80) {
+      navHeader.classList.add('nav-hidden');
+    } else if (delta < -scrollThreshold) {
+      navHeader.classList.remove('nav-hidden');
+    }
+
     lastScrollY = currentScrollY;
   }, { passive: true });
 }

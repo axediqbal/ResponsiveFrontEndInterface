@@ -15,7 +15,7 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.45;
+  opacity: 0.35;
   transition: transform 1.2s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.5s ease;
   animation: orbFloat 14s infinite alternate ease-in-out;
 }
@@ -25,7 +25,7 @@
   height: 480px;
   top: -100px;
   left: 15%;
-  background: radial-gradient(circle, rgba(160, 212, 224, 0.4) 0%, rgba(160, 212, 224, 0) 70%);
+  background: radial-gradient(circle, rgba(160, 212, 224, 0.35) 0%, rgba(160, 212, 224, 0) 70%);
 }
 
 .orb-2 {
@@ -33,7 +33,7 @@
   height: 550px;
   top: 40%;
   right: -100px;
-  background: radial-gradient(circle, rgba(165, 133, 111, 0.35) 0%, rgba(165, 133, 111, 0) 70%);
+  background: radial-gradient(circle, rgba(165, 133, 111, 0.3) 0%, rgba(165, 133, 111, 0) 70%);
   animation-delay: -5s;
   animation-duration: 18s;
 }
@@ -43,7 +43,7 @@
   height: 400px;
   bottom: 10%;
   left: 5%;
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, rgba(99, 102, 241, 0) 70%);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0) 70%);
   animation-delay: -8s;
   animation-duration: 16s;
 }
@@ -60,18 +60,9 @@
   }
 }
 
-/* Mouse Lighting Follower (Interactive Specular Refraction) */
+/* Mouse Lighting Follower (Removed as requested) */
 .mouse-light {
-  position: fixed;
-  width: 450px;
-  height: 450px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(160, 212, 224, 0.12) 0%, rgba(160, 212, 224, 0) 70%);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  transition: opacity 0.3s ease;
-  mix-blend-mode: screen;
+  display: none !important;
 }
 
 /* Base Glassmorphism 2.0 Panel */
