@@ -38,14 +38,24 @@ export function initBadge() {
   function loadVerifiedBadges() {
     if (!verifiedListContainer) return;
 
-    fetch('/api/badges')
-      .then(res => res.json())
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+    fetch('/api/badges', {
+      headers: { 'Accept': 'application/json' },
+      signal: controller.signal
+    })
+      .then(async res => {
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then(result => {
         if (!result.success || !Array.isArray(result.data)) return;
         
         verifiedListContainer.innerHTML = '';
         if (result.data.length === 0) {
-          verifiedListContainer.innerHTML = '<p style="color:var(--color-mocha-300); font-size:13px;">No credentials registered yet.</p>';
+          verifiedListContainer.innerHTML = '<p style="color:var(--color-mocha-300); font-size:13px; padding:8px 0;">No credentials registered yet. Click "Claim Credential" above to create one! 🛡️</p>';
           return;
         }
 
@@ -86,6 +96,7 @@ export function initBadge() {
         });
       })
       .catch(err => {
+        clearTimeout(timeoutId);
         console.warn('Could not fetch badges from server:', err);
       });
   }
@@ -103,10 +114,20 @@ export function initBadge() {
       saveBadgeBtn.disabled = true;
       saveBadgeBtn.textContent = 'Verifying with Gatekeeper... 🛡️';
 
+      // 6-second watchdog timeout so the button is NEVER permanently stuck
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, 6000);
+
       try {
         const response = await fetch('/api/badges', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          signal: controller.signal,
           body: JSON.stringify({
             internName,
             tier,
@@ -114,34 +135,49 @@ export function initBadge() {
           })
         });
 
-        const data = await response.json();
+        clearTimeout(timeoutId);
+
+        let data = {};
+        const rawText = await response.text();
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          throw new Error(`Server returned unexpected response (${response.status})`);
+        }
 
         if (response.status === 201) {
           if (badgeIdDisplay && data.data) {
             badgeIdDisplay.textContent = data.data.id;
           }
-          const providerText = data.provider === 'supabase-cloud' ? ' ☁️ [Supabase Cloud]' : '';
+          const providerText = data.provider === 'supabase-cloud' ? ' ☁️ [Supabase Cloud]' : ' 💾 [Local Vault]';
           const event = new CustomEvent('app:toast', {
-            detail: { message: `✅ Credential Verified & Persisted! (ID: ${data.data.id})${providerText}` }
+            detail: { message: `✅ Credential Verified & Persisted! (ID: ${data.data?.id || 'DL-2026'})${providerText}` }
           });
           window.dispatchEvent(event);
           loadVerifiedBadges();
+          window.dispatchEvent(new CustomEvent('badges:updated'));
         } else {
           // Gatekeeper validation error
-          const errMsg = data.details ? data.details.map(d => d.message).join(' | ') : (data.message || 'Validation error');
+          const errMsg = data.details ? data.details.map(d => d.message).join(' | ') : (data.message || `Validation error (${response.status})`);
           const event = new CustomEvent('app:toast', {
-            detail: { message: `❌ Gatekeeper Rejection (${response.status}): ${errMsg}` }
+            detail: { message: `❌ Gatekeeper Rejection: ${errMsg}` }
           });
           window.dispatchEvent(event);
         }
       } catch (err) {
+        clearTimeout(timeoutId);
+        const isTimeout = err.name === 'AbortError';
+        const msg = isTimeout 
+          ? '⏱️ Request timed out after 6s. Please retry.' 
+          : `⚠️ Connection Error: ${err.message}`;
         const event = new CustomEvent('app:toast', {
-          detail: { message: `Connection Error: ${err.message}` }
+          detail: { message: msg }
         });
         window.dispatchEvent(event);
       } finally {
+        clearTimeout(timeoutId);
         saveBadgeBtn.disabled = false;
-        saveBadgeBtn.textContent = 'Save & Verify Credential 🛡️';
+        saveBadgeBtn.textContent = 'Claim Credential';
       }
     });
   }
@@ -151,7 +187,8 @@ export function initBadge() {
     copyBadgeBtn.addEventListener('click', () => {
       const currentName = badgeNameDisplay ? badgeNameDisplay.textContent : 'Intern';
       const id = badgeIdDisplay ? badgeIdDisplay.textContent : 'DL-2026-WK1-SAMPLE';
-      const textToCopy = `DecodeLabs Verified Credential: ${currentName} completed Projects 1 & 2 (Responsive Architecture + Backend API). Verification ID: ${id} | URL: http://localhost:5500/api/badges/${id}`;
+      const baseUrl = window.location.origin;
+      const textToCopy = `DecodeLabs Verified Credential: ${currentName} completed Projects 1 & 2 (Responsive Architecture + Backend API). Verification ID: ${id} | URL: ${baseUrl}/api/badges/${id}`;
       
       navigator.clipboard.writeText(textToCopy).then(() => {
         const event = new CustomEvent('app:toast', {

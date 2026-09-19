@@ -94,9 +94,15 @@ export async function getDatabaseStatus(req, res) {
 
   if (supabase) {
     try {
-      const { count, error } = await supabase
+      const pingPromise = supabase
         .from('badges')
         .select('*', { count: 'exact', head: true });
+
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Supabase ping timed out after 3500ms')), 3500)
+      );
+
+      const { count, error } = await Promise.race([pingPromise, timeoutPromise]);
 
       if (error) {
         ping = { status: 'error', code: error.code, message: error.message, hint: error.hint };

@@ -16,17 +16,42 @@ import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const badgesFilePath = path.join(__dirname, '../data/badges.json');
 
-// Initialize Supabase Client if environment variables exist
+// In Vercel serverless environments, use /tmp if on VERCEL, otherwise local directory
+const fallbackDir = process.env.VERCEL ? '/tmp' : path.join(__dirname, '../data');
+const badgesFilePath = path.join(fallbackDir, 'badges.json');
+
+// Initialize Supabase Client with Service Role Key first (to bypass RLS), then anon keys
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
-export const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
+const supabaseKey = 
+  process.env.SUPABASE_SERVICE_ROLE_KEY || 
+  process.env.SUPABASE_SECRET_KEY || 
+  process.env.SUPABASE_ANON_KEY || 
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
+  process.env.SUPABASE_KEY;
+
+export const supabase = (supabaseUrl && supabaseKey) 
+  ? createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      }
+    }) 
+  : null;
 
 if (supabase) {
   console.log('⚡ [DATABASE] Supabase Cloud PostgreSQL Connected!');
 } else {
   console.log('💾 [DATABASE] Running in Local Mode — using local JSON persistence vault.');
+}
+
+// Timeout helper to ensure no asynchronous DB call hangs Express
+function withTimeout(promise, ms = 3500) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`Operation timed out after ${ms}ms`)), ms))
+  ]);
 }
 
 // Normalizer for Supabase snake_case <-> camelCase
@@ -58,7 +83,11 @@ function normalizeBadge(row) {
 function readBadges() {
   try {
     if (!fs.existsSync(badgesFilePath)) {
-      fs.writeFileSync(badgesFilePath, '[]', 'utf8');
+      try {
+        fs.writeFileSync(badgesFilePath, '[]', 'utf8');
+      } catch (e) {
+        return [];
+      }
       return [];
     }
     const data = fs.readFileSync(badgesFilePath, 'utf8');
@@ -74,7 +103,7 @@ function writeBadges(badges) {
   try {
     fs.writeFileSync(badgesFilePath, JSON.stringify(badges, null, 2), 'utf8');
   } catch (error) {
-    console.error('Error writing badges database:', error);
+    console.warn('Local storage write warning (expected in read-only lambdas):', error.message);
   }
 }
 
@@ -91,7 +120,7 @@ export async function getAllBadges(req, res) {
       let query = supabase.from('badges').select('*').order('issued_at', { ascending: false });
       if (tier) query = query.ilike('tier', tier);
 
-      const { data, error } = await query;
+      const { data, error } = await withTimeout(query, 3500);
       if (!error && Array.isArray(data)) {
         let filtered = data.map(normalizeBadge);
         if (search) {
@@ -112,7 +141,7 @@ export async function getAllBadges(req, res) {
         });
       }
     } catch (err) {
-      console.warn('Supabase fetch failed, falling back to local vault:', err.message);
+      console.warn('Supabase fetch failed or timed out, falling back to local vault:', err.message);
     }
   }
 
@@ -153,11 +182,13 @@ export async function getBadgeById(req, res) {
   // 1. Try Supabase
   if (supabase) {
     try {
-      const { data, error } = await supabase
+      const query = supabase
         .from('badges')
         .select('*')
         .ilike('id', id)
         .single();
+
+      const { data, error } = await withTimeout(query, 3500);
 
       if (!error && data) {
         return res.status(200).json({
@@ -243,26 +274,31 @@ export async function createBadge(req, res) {
         issued_at: now
       };
 
-      // Try inserting with skills column first
-      let { error } = await supabase.from('badges').insert([{
-        ...basePayload,
-        skills: JSON.stringify(assignedSkills)
-      }]);
+      const doInsert = async () => {
+        // Try inserting with skills column first
+        let { error } = await supabase.from('badges').insert([{
+          ...basePayload,
+          skills: JSON.stringify(assignedSkills)
+        }]);
 
-      // If skills column is not in the schema, retry without it seamlessly
-      if (error && error.message && error.message.includes('skills')) {
-        const retry = await supabase.from('badges').insert([basePayload]);
-        error = retry.error;
-      }
+        // If skills column is not in the schema, retry without it seamlessly
+        if (error && error.message && error.message.includes('skills')) {
+          const retry = await supabase.from('badges').insert([basePayload]);
+          error = retry.error;
+        }
+        return error;
+      };
 
-      if (!error) {
+      const insertError = await withTimeout(doInsert(), 3500);
+
+      if (!insertError) {
         savedToCloud = true;
         console.log('✅ [SUPABASE] Badge inserted successfully to cloud table:', newCredentialId);
       } else {
-        console.error('❌ [SUPABASE INSERT ERROR]:', error.message || error);
+        console.error('❌ [SUPABASE INSERT ERROR]:', insertError.message || insertError);
       }
     } catch (err) {
-      console.warn('Supabase insert exception:', err.message);
+      console.warn('⚠️ [SUPABASE TIMEOUT/ERROR]:', err.message);
     }
   }
 
@@ -314,11 +350,13 @@ export async function updateBadge(req, res) {
   // Supabase update if available
   if (supabase) {
     try {
-      await supabase.from('badges').update({
+      const updateQuery = supabase.from('badges').update({
         intern_name: badges[index].internName,
         tier: badges[index].tier,
         skills: JSON.stringify(badges[index].skills)
       }).ilike('id', id);
+
+      await withTimeout(updateQuery, 3500);
     } catch (err) {
       console.warn('Supabase update warning:', err.message);
     }
@@ -357,7 +395,8 @@ export async function deleteBadge(req, res) {
   // Supabase delete if available
   if (supabase) {
     try {
-      await supabase.from('badges').delete().ilike('id', id);
+      const deleteQuery = supabase.from('badges').delete().ilike('id', id);
+      await withTimeout(deleteQuery, 3500);
     } catch (err) {
       console.warn('Supabase delete warning:', err.message);
     }
