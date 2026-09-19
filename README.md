@@ -4,29 +4,38 @@
 
 ---
 
+## 🚀 Live Demo & Deployment
+
+- **Live Deployment (Vercel)**: [View Live Application](https://responsive-front-end-interface.vercel.app) *(or connect your Vercel project)*
+- **GitHub Repository**: [https://github.com/axediqbal/ResponsiveFrontEndInterface](https://github.com/axediqbal/ResponsiveFrontEndInterface)
+- **Local Dev Server**: `http://localhost:5500`
+
+---
+
 ## 📖 Overview
 
 This repository represents the full-stack engineering curriculum across **Week 1** and **Week 2** of the **DecodeLabs Industrial Training Program**:
 
 - **Week 1 (Project 1: The Skin)**: Fluid, accessible responsive frontend architecture constructed 100% with native web standards (HTML5 Landmarks, CSS Grid 2D Macro Layouts, Flexbox, Liquid Glass 2026 aesthetics, WCAG 2.1 AA compliance).
-- **Week 2 (Project 2: The Nervous System)**: High-performance Node.js/Express REST API engine featuring dual-layer Gatekeeper validation ("Never Trust the Client"), autonomic rate-limiting defense, high-resolution IPO latency telemetry, and interactive sandbox tooling.
+- **Week 2 (Project 2: The Nervous System)**: High-performance Node.js/Express REST API engine featuring dual-layer Gatekeeper validation ("Never Trust the Client"), autonomic rate-limiting defense, high-resolution IPO latency telemetry, live ECG vitals pulse visualizer, and in-browser interactive API sandbox console.
 
 ---
 
-## 🏆 Core Mandates & Full-Stack Architecture
+## 🏆 Core Mandates & Architecture Breakdown
 
 ### 🎨 Frontend (The Skin)
-- **100% Pure Web Standards**: Semantic **HTML5**, modern **CSS3** (Grid & Flexbox), modular vanilla **JavaScript**.
-- **Zero Heavy UI Frameworks**: Master native browser capabilities and responsive design principles.
-- **Mobile-First Responsive Strategy**: Scales seamlessly across Mobile (`375px`), Tablet (`768px`), Laptop (`1024px`), and Ultrawide (`1280px+`).
-- **Liquid Glass 2026 Aesthetics**: Color tokens (`--color-mocha-500`, `--color-ethereal-300`, `--color-moonlit-bg`), specular rim highlights, and ambient glow followers.
+- **100% Pure Web Standards**: Semantic **HTML5**, modern **CSS3** (Grid & Flexbox), modular vanilla **JavaScript**. Zero heavy framework dependencies (no React/Angular overhead).
+- **Mobile-First Responsive Strategy**: Scales seamlessly across Mobile (`375px`, `480px`), Tablet (`768px`), Desktop (`1024px`), and Ultrawide (`1280px+`).
+- **Modern iPhone Bottom Dock**: On mobile screens, the navigation bar seamlessly docks at the **bottom** like a native iOS dynamic island, featuring an upward-opening bottom sheet menu.
+- **Liquid Glass 2026 Aesthetics**: Curated HSL color tokens (`--color-mocha-500`, `--color-ethereal-300`, `--color-moonlit-bg`), specular rim highlights, and 60fps hardware-accelerated ambient cyber background video.
 
 ### 🧠 Backend (The Nervous System)
 - **RESTful Resource Naming**: Clear noun-based resources and HTTP verb methods (`GET`, `POST`, `PUT`, `DELETE`).
-- **The Gatekeeper Rule ("Never Trust the Client")**: Blood-Brain Barrier performing **Syntactic Validation** (schema/types) and **Semantic Validation** (domain rules) returning `400 Bad Request` with structured error arrays.
+- **The Gatekeeper Rule ("Never Trust the Client")**: Blood-Brain Barrier performing **Syntactic Validation** (schema/data types) and **Semantic Validation** (domain rules) returning `400 Bad Request` with structured error arrays.
 - **Status Code Precision**: Complete semantic signaling (`200 OK`, `201 Created` with `Location` header, `204 No Content`, `400 Bad Request`, `404 Not Found`, `429 Too Many Requests`, `500 Server Error`).
 - **Autonomic Defense (Rate Limiter)**: Sliding-window limiter mitigating bursts with `X-RateLimit-*` and `Retry-After` headers.
-- **High-Resolution Telemetry**: Nanosecond latency measurement via `process.hrtime` injected into `X-Response-Time` headers.
+- **High-Resolution Telemetry**: Nanosecond latency measurement via `process.hrtime` injected into `X-Response-Time` headers and visualized on a live HTML5 Canvas ECG monitor.
+- **Data Persistence**: File-backed JSON database (`server/data/badges.json`) with modular design ready to connect directly to Supabase / PostgreSQL.
 
 ---
 
@@ -52,6 +61,8 @@ This repository represents the full-stack engineering curriculum across **Week 1
 ```text
 ├── index.html                 # Full-Stack Application UI & Landmark Structure
 ├── package.json               # Development server & ESM module configuration
+├── vercel.json                # Vercel serverless deployment configuration
+├── .gitignore                 # Build artifacts & dependencies filter
 ├── css/
 │   ├── variables.css          # 2026 Design tokens, color palette & typography
 │   ├── base.css               # Modern CSS reset & global styles
@@ -60,14 +71,16 @@ This repository represents the full-stack engineering curriculum across **Week 1
 │   └── components.css         # UI modules, API Console & ECG Monitor
 ├── js/
 │   ├── app.js                 # Master coordinator bootstrap
-│   ├── navbar.js              # Floating island navigation & mobile drawer
+│   ├── navbar.js              # Floating island navigation & mobile bottom dock
 │   ├── theme.js               # Multi-theme switcher & localStorage persistence
 │   ├── simulator.js           # Multi-device responsive viewport simulator
 │   ├── roadmap.js             # Interactive 6-step roadmap checklist
 │   ├── toolkit.js             # Blueprint inspector & developer survival vault
 │   ├── badge.js               # Qualification badge customizer & ledger sync
 │   ├── systemPulse.js         # Real-time ECG canvas & health telemetry poller
-│   └── apiConsole.js          # Interactive browser REST API test sandbox
+│   ├── apiConsole.js          # Interactive browser REST API test sandbox
+│   ├── mouseScrub.js          # 60fps hardware-accelerated ambient video engine
+│   └── typewriter.js         # Retro-futurist typewriter animation & contact pill
 ├── server/
 │   ├── server.js              # Express.js REST API bootstrap & middleware pipeline
 │   ├── routes/
@@ -95,6 +108,7 @@ This repository represents the full-stack engineering curriculum across **Week 1
 
 ### Prerequisites
 - Node.js (v18+ recommended)
+- npm
 
 ### Run Locally
 
@@ -117,16 +131,20 @@ This repository represents the full-stack engineering curriculum across **Week 1
 4. **Open in browser**:
    Navigate to [http://localhost:5500](http://localhost:5500).
 
+5. **Run Endpoint Verification Suite**:
+   ```bash
+   npm test
+   ```
+
 ---
 
 ## 📬 Contact & Attribution
 
+- **Developer**: Ahmed Iqbal ([GitHub](https://github.com/axediqbal))
 - **Organization**: DecodeLabs Industrial Training Program
 - **Location**: Greater Lucknow, India
 - **Website**: [www.decodelabs.tech](https://www.decodelabs.tech)
 - **Email**: [decodelabs.tech@gmail.com](mailto:decodelabs.tech@gmail.com)
-- **Phone**: +91 89330 06408
 
 ---
-*Created with ❤️ for DecodeLabs Full Stack Interns — Batch 2026.*
-
+*Created with ❤️ for DecodeLabs Full Stack Internship — Batch 2026.*
