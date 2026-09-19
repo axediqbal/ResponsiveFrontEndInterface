@@ -255,9 +255,14 @@ export async function createBadge(req, res) {
         error = retry.error;
       }
 
-      if (!error) savedToCloud = true;
+      if (!error) {
+        savedToCloud = true;
+        console.log('✅ [SUPABASE] Badge inserted successfully to cloud table:', newCredentialId);
+      } else {
+        console.error('❌ [SUPABASE INSERT ERROR]:', error.message || error);
+      }
     } catch (err) {
-      console.warn('Supabase insert failed:', err.message);
+      console.warn('Supabase insert exception:', err.message);
     }
   }
 

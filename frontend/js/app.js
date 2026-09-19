@@ -18,23 +18,28 @@ import { initSystemPulse } from './week2/systemPulse.js';
 import { initApiConsole } from './week2/apiConsole.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Submodules
-  initTheme();
-  initNavbar();
-  initSimulator();
-  initToolkit();
-  initRoadmap();
-  initBadge();
-  initSystemPulse();
-  initApiConsole();
-  initMouseScrubVideo();
-  initHeroTypewriter();
+  const initializers = [
+    { name: 'Theme', fn: initTheme },
+    { name: 'Navbar', fn: initNavbar },
+    { name: 'Simulator', fn: initSimulator },
+    { name: 'Toolkit', fn: initToolkit },
+    { name: 'Roadmap', fn: initRoadmap },
+    { name: 'Badge & Credentials', fn: initBadge },
+    { name: 'SystemPulse & ECG', fn: initSystemPulse },
+    { name: 'API Console Sandbox', fn: initApiConsole },
+    { name: 'MouseScrubVideo', fn: initMouseScrubVideo },
+    { name: 'HeroTypewriter', fn: initHeroTypewriter },
+    { name: 'LiquidGlassPhysics', fn: initLiquidGlassPhysics },
+    { name: 'ToastSystem', fn: initToastSystem }
+  ];
 
-  // Initialize 2026 Liquid Glass Physics
-  initLiquidGlassPhysics();
-
-  // Initialize Toast System
-  initToastSystem();
+  initializers.forEach(mod => {
+    try {
+      mod.fn();
+    } catch (err) {
+      console.warn(`[Module Init Warning] ${mod.name}:`, err);
+    }
+  });
 
   console.log(
     '%c⚡ DecodeLabs Full-Stack Engine: Responsive Architecture & Nervous System ACTIVE',

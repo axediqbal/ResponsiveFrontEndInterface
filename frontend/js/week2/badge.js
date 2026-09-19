@@ -61,17 +61,25 @@ export function initBadge() {
           item.style.gap = '8px';
           item.style.fontSize = '13px';
 
-          const tierColor = badge.tier === 'Platinum' ? '#c084fc' :
-                            badge.tier === 'Gold' ? '#fbbf24' :
-                            badge.tier === 'Silver' ? '#94a3b8' : '#d97706';
+          const name = badge.internName || badge.intern_name || 'Verified Intern';
+          const tier = badge.tier || 'Gold';
+          const id = badge.id || 'DL-2026';
+          const rawDate = badge.issuedAt || badge.issued_at;
+          const displayDate = rawDate ? new Date(rawDate).toLocaleDateString() : new Date().toLocaleDateString();
+
+          const tierLower = tier.toLowerCase();
+          const tierColor = tierLower.includes('plat') ? '#c084fc' :
+                            tierLower.includes('gold') ? '#fbbf24' :
+                            tierLower.includes('silver') ? '#94a3b8' :
+                            tierLower.includes('architect') ? '#38bdf8' : '#34d399';
 
           item.innerHTML = `
             <div>
-              <strong style="color:var(--color-ethereal-300); font-size:14px;">${badge.internName}</strong>
-              <div style="color:rgba(255,255,255,0.5); font-family:var(--font-mono); font-size:11px;">${badge.id} • ${new Date(badge.issuedAt).toLocaleDateString()}</div>
+              <strong style="color:var(--color-ethereal-300); font-size:14px;">${name}</strong>
+              <div style="color:rgba(255,255,255,0.5); font-family:var(--font-mono); font-size:11px;">${id} • ${displayDate}</div>
             </div>
             <span class="glass-pill" style="border-color:${tierColor}; color:${tierColor}; font-weight:700;">
-              ${badge.tier}
+              ${tier}
             </span>
           `;
           verifiedListContainer.appendChild(item);
@@ -112,16 +120,17 @@ export function initBadge() {
           if (badgeIdDisplay && data.data) {
             badgeIdDisplay.textContent = data.data.id;
           }
+          const providerText = data.provider === 'supabase-cloud' ? ' ☁️ [Supabase Cloud]' : '';
           const event = new CustomEvent('app:toast', {
-            detail: { message: `✅ Credential Verified & Persisted! (ID: ${data.data.id})` }
+            detail: { message: `✅ Credential Verified & Persisted! (ID: ${data.data.id})${providerText}` }
           });
           window.dispatchEvent(event);
           loadVerifiedBadges();
         } else {
           // Gatekeeper validation error
-          const errMsg = data.details ? data.details.map(d => d.message).join(' | ') : data.message;
+          const errMsg = data.details ? data.details.map(d => d.message).join(' | ') : (data.message || 'Validation error');
           const event = new CustomEvent('app:toast', {
-            detail: { message: `❌ Gatekeeper Rejection (400): ${errMsg}` }
+            detail: { message: `❌ Gatekeeper Rejection (${response.status}): ${errMsg}` }
           });
           window.dispatchEvent(event);
         }

@@ -1,5 +1,21 @@
 [
   {
+    "id": "DL-2026-WK1-49769A",
+    "internName": "Ahmed Iqbal",
+    "email": "ahmediqbal@decodelabs.dev",
+    "tier": "Full Stack Architect (Level 1)",
+    "clearanceLevel": "L1-Operator",
+    "projectName": "The Responsive Architecture & Nervous System",
+    "status": "Verified",
+    "issuedAt": "2026-09-19T09:21:18.853Z",
+    "skills": [
+      "HTML5 Semantics",
+      "CSS Grid",
+      "RESTful API",
+      "Gatekeeper Validation"
+    ]
+  },
+  {
     "id": "DL-2026-WK1-A9F32B",
     "internName": "Ahmed Iqbal",
     "tier": "Platinum",
