@@ -13,6 +13,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const badgesFilePath = path.join(__dirname, '../data/badges.json');
 
+import { supabase } from './badgeController.js';
+
 const serverStartTime = Date.now();
 let requestCounter = 0;
 
@@ -81,4 +83,37 @@ function formatUptime(seconds) {
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
   return `${h}h ${m}m ${s}s`;
+}
+
+export async function getDatabaseStatus(req, res) {
+  const envKeys = Object.keys(process.env).filter(k => 
+    k.toUpperCase().includes('SUPABASE') || k.toUpperCase().includes('POSTGRES')
+  );
+
+  let ping = { status: 'untested', error: null, totalRows: null };
+
+  if (supabase) {
+    try {
+      const { count, error } = await supabase
+        .from('badges')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) {
+        ping = { status: 'error', code: error.code, message: error.message, hint: error.hint };
+      } else {
+        ping = { status: 'connected', totalRows: count };
+      }
+    } catch (e) {
+      ping = { status: 'exception', message: e.message };
+    }
+  }
+
+  res.status(200).json({
+    success: true,
+    provider: supabase ? 'supabase-cloud' : 'local-vault',
+    supabaseClientInitialized: !!supabase,
+    detectedDatabaseEnvKeys: envKeys,
+    ping,
+    timestamp: new Date().toISOString()
+  });
 }

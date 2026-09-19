@@ -4,11 +4,12 @@
  */
 
 import { Router } from 'express';
-import { getSystemHealth, getSystemPulse } from '../controllers/systemController.js';
+import { getSystemHealth, getSystemPulse, getDatabaseStatus } from '../controllers/systemController.js';
 
 const router = Router();
 
 router.get('/health', getSystemHealth);
 router.get('/pulse', getSystemPulse);
+router.get('/db-status', getDatabaseStatus);
 
 export default router;
