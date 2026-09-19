@@ -232,7 +232,7 @@ export async function createBadge(req, res) {
   let savedToCloud = false;
   if (supabase) {
     try {
-      const { error } = await supabase.from('badges').insert([{
+      const basePayload = {
         id: newCredentialId,
         intern_name: internName,
         email: newBadge.email,
@@ -240,9 +240,21 @@ export async function createBadge(req, res) {
         track: newBadge.projectName,
         clearance_level: newBadge.clearanceLevel,
         verification_code: hash,
-        skills: JSON.stringify(assignedSkills),
         issued_at: now
+      };
+
+      // Try inserting with skills column first
+      let { error } = await supabase.from('badges').insert([{
+        ...basePayload,
+        skills: JSON.stringify(assignedSkills)
       }]);
+
+      // If skills column is not in the schema, retry without it seamlessly
+      if (error && error.message && error.message.includes('skills')) {
+        const retry = await supabase.from('badges').insert([basePayload]);
+        error = retry.error;
+      }
+
       if (!error) savedToCloud = true;
     } catch (err) {
       console.warn('Supabase insert failed:', err.message);
