@@ -21,7 +21,7 @@ import simulatorRoutes from './routes/simulatorRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..');
+const frontendDir = path.resolve(__dirname, '../frontend');
 
 const app = express();
 const PORT = process.env.PORT || 5500;
@@ -40,7 +40,7 @@ app.use(telemetryLogger);
 app.use(autonomicRateLimiter);
 
 // 3. Serve Frontend Static Assets (The Skin)
-app.use(express.static(rootDir));
+app.use(express.static(frontendDir));
 
 // 4. REST API Endpoints (The Nervous System)
 app.use('/api/system', systemRoutes);

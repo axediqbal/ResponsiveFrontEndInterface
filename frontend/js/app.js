@@ -1,19 +1,21 @@
 /**
  * DecodeLabs Project 1 & 2: Master Application Coordinator
- * Connects theme, navbar, viewport simulator, toolkit, roadmap,
- * qualification ledger, retro-futurist physics, and REST API engine.
+ * Connects Week 1 (The Skin) & Week 2 (The Nervous System) modular chunks.
  */
 
-import { initTheme } from './theme.js';
-import { initNavbar } from './navbar.js';
-import { initSimulator } from './simulator.js';
-import { initToolkit } from './toolkit.js';
-import { initRoadmap } from './roadmap.js';
-import { initBadge } from './badge.js';
-import { initSystemPulse } from './systemPulse.js';
-import { initApiConsole } from './apiConsole.js';
-import { initMouseScrubVideo } from './mouseScrub.js';
-import { initHeroTypewriter } from './typewriter.js';
+// Week 1 Chunks: The Skin & UI Physics
+import { initTheme } from './week1/theme.js';
+import { initNavbar } from './week1/navbar.js';
+import { initSimulator } from './week1/simulator.js';
+import { initToolkit } from './week1/toolkit.js';
+import { initRoadmap } from './week1/roadmap.js';
+import { initMouseScrubVideo } from './week1/mouseScrub.js';
+import { initHeroTypewriter } from './week1/typewriter.js';
+
+// Week 2 Chunks: The Nervous System (REST API, Telemetry, Credentials)
+import { initBadge } from './week2/badge.js';
+import { initSystemPulse } from './week2/systemPulse.js';
+import { initApiConsole } from './week2/apiConsole.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Submodules

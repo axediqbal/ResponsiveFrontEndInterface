@@ -56,50 +56,60 @@ This repository represents the full-stack engineering curriculum across **Week 1
 
 ---
 
-## 📁 Project Directory Structure
+## 📁 Project Directory Structure (Clean Modular Architecture)
 
 ```text
-├── index.html                 # Full-Stack Application UI & Landmark Structure
-├── package.json               # Development server & ESM module configuration
-├── vercel.json                # Vercel serverless deployment configuration
-├── .gitignore                 # Build artifacts & dependencies filter
-├── css/
-│   ├── variables.css          # 2026 Design tokens, color palette & typography
-│   ├── base.css               # Modern CSS reset & global styles
-│   ├── glass.css              # Liquid Glass & Glassmorphism 2.0 system
-│   ├── layout.css             # CSS Grid floor-plans & responsive breakpoints
-│   └── components.css         # UI modules, API Console & ECG Monitor
-├── js/
-│   ├── app.js                 # Master coordinator bootstrap
-│   ├── navbar.js              # Floating island navigation & mobile bottom dock
-│   ├── theme.js               # Multi-theme switcher & localStorage persistence
-│   ├── simulator.js           # Multi-device responsive viewport simulator
-│   ├── roadmap.js             # Interactive 6-step roadmap checklist
-│   ├── toolkit.js             # Blueprint inspector & developer survival vault
-│   ├── badge.js               # Qualification badge customizer & ledger sync
-│   ├── systemPulse.js         # Real-time ECG canvas & health telemetry poller
-│   ├── apiConsole.js          # Interactive browser REST API test sandbox
-│   ├── mouseScrub.js          # 60fps hardware-accelerated ambient video engine
-│   └── typewriter.js         # Retro-futurist typewriter animation & contact pill
-├── server/
-│   ├── server.js              # Express.js REST API bootstrap & middleware pipeline
-│   ├── routes/
-│   │   ├── systemRoutes.js    # Health & pulse endpoints
-│   │   ├── badgeRoutes.js     # Credentials CRUD endpoints
-│   │   └── simulatorRoutes.js # Status code & IPO latency simulator
+WEEK 1 AND 2/
+├── backend/                              # [The Nervous System] Express.js REST API Engine
+│   ├── server.js                         # Server Bootstrap & Frontend Asset Serving Bridge
 │   ├── controllers/
-│   │   ├── systemController.js    # Telemetry and vitals business logic
-│   │   ├── badgeController.js     # Credential persistence & verification
-│   │   └── simulatorController.js # Educational status & echo handling
+│   │   ├── badgeController.js            # Credential Ledger CRUD logic
+│   │   ├── simulatorController.js        # API Catalog & Endpoint Simulator
+│   │   └── systemController.js           # Server Telemetry & Health Vitals
 │   ├── middleware/
-│   │   ├── gatekeeper.js      # Blood-Brain Barrier (Syntactic + Semantic validation)
-│   │   ├── logger.js          # Signal telemetry & latency timer (X-Response-Time)
-│   │   ├── rateLimiter.js     # Autonomic Defense (HTTP 429 limiter)
-│   │   └── errorHandler.js    # Centralized 404 & 500 error boundaries
+│   │   ├── errorHandler.js               # Centralized 404 & 500 JSON error boundaries
+│   │   ├── logger.js                     # Request latency & telemetry tracker
+│   │   ├── rateLimiter.js                # Autonomic defense (120 req / 15 min)
+│   │   └── validator.js                  # Dual-layer Gatekeeper payload verification
+│   ├── routes/
+│   │   ├── badgeRoutes.js                # /api/badges (GET, POST, PUT, DELETE)
+│   │   ├── simulatorRoutes.js            # /api/simulator/catalog
+│   │   └── systemRoutes.js               # /api/system/health, /api/system/pulse
 │   └── data/
-│       └── badges.json        # JSON file-backed credential storage
-├── Full Stack Project 1.pdf   # DecodeLabs Project 1 Guidelines
-└── Intership Survival Tool Kit.pdf # DecodeLabs Survival Guide
+│       └── badges.json                   # Verified credentials database
+│
+├── frontend/                             # [The Skin & Interactive Sandbox]
+│   ├── index.html                        # Semantic HTML5 Master App
+│   ├── css/                              # Modular Performance Chunks
+│   │   ├── variables.css                 # 2026 Color Palette & Design Tokens
+│   │   ├── base.css                      # Reset & Typography
+│   │   ├── glass.css                     # Liquid Glass 2.0 Glassmorphism Shaders
+│   │   ├── layout.css                    # 2D Grid Floor-plans & Landmark Layouts
+│   │   └── chunks/                       # Dedicated Performance Chunks:
+│   │       ├── week1-ui.css              # Hero, Dynamic Island, Toolkit, Blueprint, Terminal
+│   │       ├── week2-nervous.css         # API Sandbox, 60fps ECG Canvas, Vitals, Ledger Cards
+│   │       └── mobile-nav.css            # Native-feel Bottom Navigation Dock (max-width: 768px)
+│   └── js/                               # Modular JavaScript Chunks
+│       ├── app.js                        # Master Application Coordinator
+│       ├── week1/                        # Week 1 UI Modules
+│       │   ├── theme.js                  # Multi-palette theme engine
+│       │   ├── navbar.js                 # Dynamic island scroll listener & mobile drawer
+│       │   ├── mouseScrub.js             # Retro video scrubbing physics
+│       │   ├── typewriter.js             # Hero heading typewriter effect
+│       │   ├── toolkit.js                # Interactive industrial survival kit
+│       │   ├── roadmap.js                # Project milestones interactive timeline
+│       │   └── simulator.js              # Viewport & device preview simulator
+│       └── week2/                        # Week 2 API & Telemetry Modules
+│           ├── apiConsole.js             # In-browser Postman-style API Sandbox
+│           ├── systemPulse.js            # 60fps HTML5 Canvas ECG oscilloscope & telemetry
+│           └── badge.js                  # Credential ledger CRUD & Modal controller
+│
+├── vercel.json                           # Vercel serverless deployment routing
+├── package.json                          # Scripts & dependencies configuration
+├── README.md                             # Comprehensive technical documentation
+├── .gitignore                            # Clean repository filter
+├── Full Stack Project 1.pdf              # DecodeLabs Project 1 Guidelines
+└── Intership Survival Tool Kit.pdf       # DecodeLabs Survival Guide
 ```
 
 ---
