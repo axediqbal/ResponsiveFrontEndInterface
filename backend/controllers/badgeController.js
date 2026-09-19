@@ -12,12 +12,49 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const badgesFilePath = path.join(__dirname, '../data/badges.json');
 
-// Helper to read database
+// Initialize Supabase Client if environment variables exist
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+export const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
+
+if (supabase) {
+  console.log('⚡ [DATABASE] Supabase Cloud PostgreSQL Connected!');
+} else {
+  console.log('💾 [DATABASE] Running in Local Mode — using local JSON persistence vault.');
+}
+
+// Normalizer for Supabase snake_case <-> camelCase
+function normalizeBadge(row) {
+  let parsedSkills = row.skills;
+  if (typeof parsedSkills === 'string') {
+    try { parsedSkills = JSON.parse(parsedSkills); } catch { parsedSkills = [parsedSkills]; }
+  }
+  return {
+    id: row.id,
+    internName: row.intern_name || row.internName || 'Anonymous Operative',
+    email: row.email || '',
+    tier: row.tier || 'Novice',
+    track: row.track || 'Full Stack Engineering',
+    clearanceLevel: row.clearance_level || row.clearanceLevel || 'L1-Operator',
+    projectName: row.project_name || row.projectName || 'The Responsive Architecture & Nervous System',
+    status: row.status || 'Verified',
+    issuedAt: row.issued_at || row.issuedAt || new Date().toISOString(),
+    skills: Array.isArray(parsedSkills) && parsedSkills.length > 0 ? parsedSkills : [
+      'HTML5 Semantics',
+      'CSS Grid Floorplans',
+      'REST API Integration',
+      'Gatekeeper Validation'
+    ]
+  };
+}
+
+// Helper to read local database
 function readBadges() {
   try {
     if (!fs.existsSync(badgesFilePath)) {
@@ -32,7 +69,7 @@ function readBadges() {
   }
 }
 
-// Helper to write database
+// Helper to write local database
 function writeBadges(badges) {
   try {
     fs.writeFileSync(badgesFilePath, JSON.stringify(badges, null, 2), 'utf8');
@@ -45,10 +82,42 @@ function writeBadges(badges) {
  * GET /api/badges
  * List all badges with optional filtering
  */
-export function getAllBadges(req, res) {
-  const badges = readBadges();
+export async function getAllBadges(req, res) {
   const { tier, search } = req.query;
 
+  // 1. Try Supabase Cloud Database if configured
+  if (supabase) {
+    try {
+      let query = supabase.from('badges').select('*').order('issued_at', { ascending: false });
+      if (tier) query = query.ilike('tier', tier);
+
+      const { data, error } = await query;
+      if (!error && Array.isArray(data)) {
+        let filtered = data.map(normalizeBadge);
+        if (search) {
+          const term = search.toLowerCase();
+          filtered = filtered.filter(b => 
+            b.internName.toLowerCase().includes(term) || 
+            b.id.toLowerCase().includes(term)
+          );
+        }
+        return res.status(200).json({
+          success: true,
+          status: 200,
+          provider: 'supabase-cloud',
+          count: filtered.length,
+          totalInVault: data.length,
+          data: filtered,
+          timestamp: new Date().toISOString()
+        });
+      }
+    } catch (err) {
+      console.warn('Supabase fetch failed, falling back to local vault:', err.message);
+    }
+  }
+
+  // 2. Fallback to Local JSON Vault
+  const badges = readBadges();
   let filtered = [...badges];
 
   if (tier) {
@@ -66,6 +135,7 @@ export function getAllBadges(req, res) {
   res.status(200).json({
     success: true,
     status: 200,
+    provider: 'local-vault',
     count: filtered.length,
     totalInVault: badges.length,
     data: filtered,
@@ -77,10 +147,34 @@ export function getAllBadges(req, res) {
  * GET /api/badges/:id
  * Retrieve a specific badge by credential ID
  */
-export function getBadgeById(req, res) {
-  const badges = readBadges();
+export async function getBadgeById(req, res) {
   const { id } = req.params;
 
+  // 1. Try Supabase
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from('badges')
+        .select('*')
+        .ilike('id', id)
+        .single();
+
+      if (!error && data) {
+        return res.status(200).json({
+          success: true,
+          status: 200,
+          provider: 'supabase-cloud',
+          data: normalizeBadge(data),
+          timestamp: new Date().toISOString()
+        });
+      }
+    } catch (err) {
+      console.warn('Supabase single fetch warning:', err.message);
+    }
+  }
+
+  // 2. Fallback to Local JSON
+  const badges = readBadges();
   const found = badges.find(b => b.id.toUpperCase() === id.toUpperCase());
 
   if (!found) {
@@ -96,6 +190,7 @@ export function getBadgeById(req, res) {
   res.status(200).json({
     success: true,
     status: 200,
+    provider: 'local-vault',
     data: found,
     timestamp: new Date().toISOString()
   });
@@ -104,32 +199,58 @@ export function getBadgeById(req, res) {
 /**
  * POST /api/badges
  * Create and persist a new qualification credential
- * Syntactic & semantic checks passed via gatekeeper middleware
  */
-export function createBadge(req, res) {
-  const { internName, tier, skills } = req.sanitizedBody;
+export async function createBadge(req, res) {
+  const { internName, tier, skills, email, clearanceLevel } = req.sanitizedBody || req.body;
   const badges = readBadges();
 
   // Generate cryptographically secure credential ID
   const hash = crypto.randomBytes(3).toString('hex').toUpperCase();
   const newCredentialId = `DL-2026-WK1-${hash}`;
+  const now = new Date().toISOString();
+
+  const assignedSkills = Array.isArray(skills) && skills.length > 0 ? skills : [
+    'HTML5 Semantics',
+    'CSS Grid Floorplans',
+    'REST API Integration',
+    'Gatekeeper Validation'
+  ];
 
   const newBadge = {
     id: newCredentialId,
     internName,
-    tier,
+    email: email || `${internName.toLowerCase().replace(/\s+/g, '')}@decodelabs.dev`,
+    tier: tier || 'Novice',
+    clearanceLevel: clearanceLevel || 'L1-Operator',
     projectName: 'The Responsive Architecture & Nervous System',
     status: 'Verified',
-    issuedAt: new Date().toISOString(),
-    skills: skills.length > 0 ? skills : [
-      'HTML5 Semantics',
-      'CSS Grid Floorplans',
-      'REST API Integration',
-      'Gatekeeper Validation'
-    ]
+    issuedAt: now,
+    skills: assignedSkills
   };
 
-  badges.unshift(newBadge); // Insert at beginning
+  // 1. Persist to Supabase if connected
+  let savedToCloud = false;
+  if (supabase) {
+    try {
+      const { error } = await supabase.from('badges').insert([{
+        id: newCredentialId,
+        intern_name: internName,
+        email: newBadge.email,
+        tier: newBadge.tier,
+        track: newBadge.projectName,
+        clearance_level: newBadge.clearanceLevel,
+        verification_code: hash,
+        skills: JSON.stringify(assignedSkills),
+        issued_at: now
+      }]);
+      if (!error) savedToCloud = true;
+    } catch (err) {
+      console.warn('Supabase insert failed:', err.message);
+    }
+  }
+
+  // 2. Always maintain local shadow copy
+  badges.unshift(newBadge);
   writeBadges(badges);
 
   // Set Location header according to REST best practice
@@ -139,9 +260,10 @@ export function createBadge(req, res) {
   res.status(201).json({
     success: true,
     status: 201,
+    provider: savedToCloud ? 'supabase-cloud' : 'local-vault',
     message: `Qualification credential successfully issued for ${internName}! 🛡️`,
     data: newBadge,
-    timestamp: new Date().toISOString()
+    timestamp: now
   });
 }
 
@@ -149,9 +271,9 @@ export function createBadge(req, res) {
  * PUT /api/badges/:id
  * Update an existing credential badge
  */
-export function updateBadge(req, res) {
+export async function updateBadge(req, res) {
   const { id } = req.params;
-  const { tier, skills, notes } = req.body;
+  const { tier, skills, notes, internName } = req.body;
   const badges = readBadges();
 
   const index = badges.findIndex(b => b.id.toUpperCase() === id.toUpperCase());
@@ -165,11 +287,25 @@ export function updateBadge(req, res) {
     });
   }
 
-  // Update fields if provided
+  // Update fields
+  if (internName) badges[index].internName = internName;
   if (tier) badges[index].tier = tier;
   if (Array.isArray(skills)) badges[index].skills = skills;
   if (notes) badges[index].notes = notes;
   badges[index].updatedAt = new Date().toISOString();
+
+  // Supabase update if available
+  if (supabase) {
+    try {
+      await supabase.from('badges').update({
+        intern_name: badges[index].internName,
+        tier: badges[index].tier,
+        skills: JSON.stringify(badges[index].skills)
+      }).ilike('id', id);
+    } catch (err) {
+      console.warn('Supabase update warning:', err.message);
+    }
+  }
 
   writeBadges(badges);
 
@@ -186,7 +322,7 @@ export function updateBadge(req, res) {
  * DELETE /api/badges/:id
  * Revoke a credential badge
  */
-export function deleteBadge(req, res) {
+export async function deleteBadge(req, res) {
   const { id } = req.params;
   const badges = readBadges();
 
@@ -199,6 +335,15 @@ export function deleteBadge(req, res) {
       message: `Cannot revoke credential: Badge with ID "${id}" was not found.`,
       timestamp: new Date().toISOString()
     });
+  }
+
+  // Supabase delete if available
+  if (supabase) {
+    try {
+      await supabase.from('badges').delete().ilike('id', id);
+    } catch (err) {
+      console.warn('Supabase delete warning:', err.message);
+    }
   }
 
   const removed = badges.splice(index, 1)[0];

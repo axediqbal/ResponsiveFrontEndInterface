@@ -4,6 +4,7 @@
  * Bridges the Frontend (Project 1: The Skin) with a RESTful Engine.
  */
 
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
