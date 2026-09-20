@@ -115,7 +115,8 @@
 /* ---------------------------------------------------------------------------
    Theme 2: Warm Mocha Refinement Theme
    --------------------------------------------------------------------------- */
-[data-theme="mocha"] {
+[data-theme="mocha"],
+[data-theme="warm-earth"] {
   --bg-primary: #15100d;
   --bg-secondary: #1f1713;
   --bg-tertiary: #2b1f1a;
@@ -140,7 +141,8 @@
 /* ---------------------------------------------------------------------------
    Theme 3: Ethereal Light Moonlit Theme
    --------------------------------------------------------------------------- */
-[data-theme="light"] {
+[data-theme="light"],
+[data-theme="ethereal-light"] {
   --bg-primary: #f4f3ee;
   --bg-secondary: #eae8e1;
   --bg-tertiary: #dfdcd3;

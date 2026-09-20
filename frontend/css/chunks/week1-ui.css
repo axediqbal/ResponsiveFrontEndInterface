@@ -1026,3 +1026,210 @@
   border-color: #ffffff;
   transform: translateY(-2px);
 }
+
+.action-pill-white:active,
+.action-pill-outline:active {
+  transform: scale(0.98);
+}
+
+/* -------------------------------------------------------------------------
+   2026 LIVE AMBIENT CYBERNETIC VIDEO BACKGROUND (60FPS HARDWARE ACCELERATED)
+   ------------------------------------------------------------------------- */
+.retro-background-video {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.88;
+  filter: brightness(0.95) contrast(1.12) saturate(1.15);
+  transform: translateZ(0);
+  will-change: transform;
+  transition: opacity var(--duration-normal) ease, filter var(--duration-normal) ease;
+}
+
+.video-vignette-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  background: radial-gradient(circle at 50% 35%, rgba(6, 9, 18, 0.12) 0%, rgba(6, 9, 18, 0.72) 100%),
+              linear-gradient(180deg, rgba(6, 9, 18, 0.45) 0%, transparent 25%, transparent 70%, rgba(6, 9, 18, 0.95) 100%);
+  transition: background var(--duration-normal) ease;
+}
+
+[data-theme="light"] .retro-background-video {
+  opacity: 0.45;
+  filter: brightness(1.08) contrast(1.05);
+}
+
+[data-theme="light"] .video-vignette-overlay {
+  background: radial-gradient(circle at 50% 35%, rgba(244, 243, 238, 0.25) 0%, rgba(244, 243, 238, 0.85) 100%),
+              linear-gradient(180deg, rgba(244, 243, 238, 0.45) 0%, transparent 25%, transparent 70%, rgba(244, 243, 238, 0.95) 100%);
+}
+
+[data-theme="mocha"] .video-vignette-overlay,
+[data-theme="warm-earth"] .video-vignette-overlay {
+  background: radial-gradient(circle at 50% 35%, rgba(21, 16, 13, 0.18) 0%, rgba(21, 16, 13, 0.78) 100%),
+              linear-gradient(180deg, rgba(21, 16, 13, 0.45) 0%, transparent 25%, transparent 70%, rgba(21, 16, 13, 0.95) 100%);
+}
+
+/* -------------------------------------------------------------------------
+   Hero Retro-Futuristic Intro & Typewriter Interactive Tokens
+   ------------------------------------------------------------------------- */
+.blurred-intro-badge {
+  display: inline-block;
+  pointer-events: auto;
+  user-select: none;
+  margin-bottom: var(--space-md);
+  font-size: clamp(15px, 3.5vw, 20px);
+  line-height: 1.35;
+  font-weight: 500;
+  color: var(--text-primary);
+  filter: blur(3.5px);
+  cursor: default;
+  transition: filter var(--duration-normal) var(--ease-out);
+}
+
+.blurred-intro-badge:hover,
+.blurred-intro-badge:active {
+  filter: blur(0px);
+}
+
+.hero-typewriter-container {
+  font-size: clamp(20px, 4.5vw, 34px);
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-height: 65px;
+  margin-bottom: var(--space-md);
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background-color: var(--accent-primary);
+  vertical-align: middle;
+  margin-left: 4px;
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hero-action-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: var(--space-md);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* -------------------------------------------------------------------------
+   Tablets & Laptop Layout Media Queries
+   ------------------------------------------------------------------------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-title {
+    font-size: clamp(2.6rem, 5vw, 4rem);
+  }
+
+  .hero-stats-strip {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .simulator-stage {
+    min-height: 400px;
+  }
+
+  .shortcut-buttons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .badge-portal-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .badge-interactive-card {
+    max-width: 420px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1440px) {
+  .nav-item-link {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.82rem;
+  }
+
+  .simulator-stage {
+    min-height: 440px;
+  }
+}
+
+@media (pointer: coarse) {
+  .icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .nav-item-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-nav-link {
+    min-height: 48px;
+  }
+
+  .viewport-btn {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
+
+  .shortcut-key-btn {
+    min-height: 48px;
+  }
+
+  .vault-tab {
+    min-height: 44px;
+  }
+
+  .custom-checkbox {
+    width: 24px;
+    height: 24px;
+  }
+
+  .checkbox-toggle {
+    min-height: 44px;
+    padding: 4px 0;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-wrapper {
+    padding-block: var(--space-sm) var(--space-md);
+  }
+
+  .hero-title {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+  }
+
+  .simulator-stage {
+    min-height: 220px;
+  }
+
+  .vscode-terminal {
+    min-height: 100px;
+    max-height: 160px;
+  }
+}

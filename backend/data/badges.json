@@ -1,5 +1,20 @@
 [
   {
+    "id": "DL-2026-WK1-D6D90B",
+    "internName": "Test Desktop Suite",
+    "email": "testdesktopsuite@decodelabs.dev",
+    "tier": "Platinum",
+    "clearanceLevel": "L1-Operator",
+    "projectName": "The Responsive Architecture & Nervous System",
+    "status": "Verified",
+    "issuedAt": "2026-09-20T10:15:12.447Z",
+    "skills": [
+      "HTML5",
+      "CSS3",
+      "Node.js"
+    ]
+  },
+  {
     "id": "DL-2026-WK1-4A9966",
     "internName": "Ahmed Khan",
     "email": "ahmedkhan@decodelabs.dev",

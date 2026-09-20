@@ -4,18 +4,18 @@
  */
 
 // Week 1 Chunks: The Skin & UI Physics
-import { initTheme } from './week1/theme.js?v=3.0';
-import { initNavbar } from './week1/navbar.js?v=3.0';
-import { initSimulator } from './week1/simulator.js?v=3.0';
-import { initToolkit } from './week1/toolkit.js?v=3.0';
-import { initRoadmap } from './week1/roadmap.js?v=3.0';
-import { initMouseScrubVideo } from './week1/mouseScrub.js?v=3.0';
-import { initHeroTypewriter } from './week1/typewriter.js?v=3.0';
+import { initTheme } from './week1/theme.js?v=3.6';
+import { initNavbar } from './week1/navbar.js?v=3.6';
+import { initSimulator } from './week1/simulator.js?v=3.6';
+import { initToolkit } from './week1/toolkit.js?v=3.6';
+import { initRoadmap } from './week1/roadmap.js?v=3.6';
+import { initMouseScrubVideo } from './week1/mouseScrub.js?v=3.6';
+import { initHeroTypewriter } from './week1/typewriter.js?v=3.6';
 
 // Week 2 Chunks: The Nervous System (REST API, Telemetry, Credentials)
-import { initBadge } from './week2/badge.js?v=3.0';
-import { initSystemPulse } from './week2/systemPulse.js?v=3.0';
-import { initApiConsole } from './week2/apiConsole.js?v=3.0';
+import { initBadge } from './week2/badge.js?v=3.6';
+import { initSystemPulse } from './week2/systemPulse.js?v=3.6';
+import { initApiConsole } from './week2/apiConsole.js?v=3.6';
 
 document.addEventListener('DOMContentLoaded', () => {
   const initializers = [
