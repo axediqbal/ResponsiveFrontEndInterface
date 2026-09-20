@@ -1,57 +1,71 @@
 # UI/UX DESIGN SPECIFICATION DOCUMENT
-**Project Name:** DecodeLabs Full Stack Engineering — Qualification & Showcase Platform  
-**Document Version:** 1.0.0  
+**Project Title:** DecodeLabs Industrial Training Program — Full Stack Qualification Platform  
+**Modules Covered:** Week 1 ("The Skin") & Week 2 ("The Nervous System")  
 **Design Philosophy:** 2026 Cybernetic Liquid Glassmorphism  
-**Target Viewports:** 320px (Mobile Narrow) to 2560px (Ultra-wide Desktop)  
+**Target Viewports:** 320px (Mobile Narrow) to 2560px (Ultra-wide 4K Desktop)  
+**Document Version:** 2.0.0 (Production Verified)  
 
 ---
 
-## 1. Aesthetic Vision & Design Pillars
+## 1. Aesthetic Vision & Sensory Pillars
 
-The user interface balances high-tech terminal precision with elegant, modern glass surfaces.
+The interface creates a high-tech developer terminal environment overlaid with frosted glass surfaces:
 
-1. **Depth Through Layering:** Multi-plane spatial hierarchy (Fixed video backdrop -> Tinted backdrop overlay -> Glass panels -> Elevated interactive controls).
-2. **Dynamic Visual Vitality:** Ambient background motion, real-time typing indicators, and tactile micro-interactions that make the interface feel alive.
-3. **Zero Layout Shift & Zero Blowout:** Strict adherence to container boundaries, mathematical fluidity via `clamp()`, and guaranteed zero horizontal scrolling on mobile.
+1. **Spatial Depth & Layering:**
+   - Layer 0 (Backdrop): Fixed ambient video background running at 60fps.
+   - Layer 1 (Atmosphere): Tinted semi-transparent color overlay.
+   - Layer 2 (Structure): Liquid glass panels with backdrop blur and specular border reflections.
+   - Layer 3 (Controls): High-contrast typography, glowing neon accents, and interactive buttons.
+2. **Dynamic Vitality:** Micro-interactions (blinking terminal cursor, live radar pulse, subtle hover elevation) signal to the user that the system is reactive and live.
+3. **Mathematical Fluidity:** Layout dimensions, spacing, and typography scale smoothly across viewports without abrupt layout snapping.
 
 ---
 
-## 2. Color System & Design Tokens
+## 2. Design Tokens & Color Palette
 
-Design tokens are managed via CSS Custom Properties in `frontend/css/variables.css` supporting both Cyber Mocha and Ethereal Light themes:
+All tokens are defined in [variables.css](file:///c:/Users/Dell/Desktop/ahmed/Decodelab%20Intern/WEEK%201%20AND%202/frontend/css/variables.css) supporting dynamic runtime theme switching:
 
+### Cyber Mocha Theme (Default / Dark Mode)
 ```css
-/* CYBER MOCHA THEME (DEFAULT / DARK MODE) */
 :root, [data-theme="mocha"] {
+  /* Surface & Background */
   --bg-primary: #0e0d0b;
   --bg-secondary: #181512;
-  --glass-bg: rgba(24, 21, 18, 0.72);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-glow: rgba(212, 163, 115, 0.15);
+  --bg-tertiary: #221e1a;
   
+  /* Glassmorphism Specs */
+  --glass-bg: rgba(24, 21, 18, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.04);
+  --glass-glow: rgba(212, 163, 115, 0.15);
+  --backdrop-blur: 16px;
+
+  /* Typography Colors */
   --text-primary: #f7ede2;
   --text-secondary: #c5b8a5;
   --text-muted: #847563;
 
-  --accent-amber: #d4a373;
-  --accent-cyan: #5bc0be;
-  --accent-emerald: #52b788;
-  --accent-crimson: #e63946;
-  
-  --backdrop-blur: 16px;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  /* Accent Palette */
+  --accent-amber: #d4a373;     /* Clearance L3 / Grandmaster */
+  --accent-cyan: #5bc0be;      /* Terminal Prompts & IPO Flow */
+  --accent-emerald: #52b788;   /* Verified Status & Success */
+  --accent-crimson: #e63946;   /* Revocation & Validation Errors */
+  --accent-purple: #9d4edd;    /* API Sandbox & Simulator */
 }
+```
 
-/* ETHEREAL LIGHT THEME */
+### Ethereal Light Theme
+```css
 [data-theme="light"] {
   --bg-primary: #f8f6f0;
   --bg-secondary: #ece7dc;
-  --glass-bg: rgba(255, 255, 255, 0.78);
+  --bg-tertiary: #dfd8cc;
+
+  --glass-bg: rgba(255, 255, 255, 0.82);
   --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.6);
   --glass-glow: rgba(212, 163, 115, 0.25);
-  
+
   --text-primary: #2b2520;
   --text-secondary: #574c43;
   --text-muted: #8c7e72;
@@ -60,89 +74,96 @@ Design tokens are managed via CSS Custom Properties in `frontend/css/variables.c
 
 ---
 
-## 3. Typography Hierarchy & Fluid Math
+## 3. Typography Hierarchy & Fluid Calculations
 
-Fonts are sourced from Google Fonts to convey both technical precision and editorial elegance:
-- **Display & Headings:** `Space Grotesk`, sans-serif (High-tech geometric character).
-- **Body & Controls:** `Inter`, sans-serif (Optimal legibility and clean glyphs).
-- **Terminal & Telemetry:** `JetBrains Mono`, monospace (Fixed-width clarity for code and metrics).
+| Role | Font Family | Size Scaling Formula | Fallback Stack |
+| :--- | :--- | :--- | :--- |
+| **Hero Title** | `Space Grotesk` | `font-size: clamp(1.75rem, 4vw + 1rem, 3.25rem);` | sans-serif |
+| **Section Headings** | `Space Grotesk` | `font-size: clamp(1.25rem, 2.5vw + 0.5rem, 2rem);` | sans-serif |
+| **Body & UI Text** | `Inter` | `font-size: clamp(0.875rem, 0.5vw + 0.8rem, 1rem);` | -apple-system, sans-serif |
+| **Code & Telemetry** | `JetBrains Mono` | `font-size: 0.875rem; font-variant-numeric: tabular-nums;` | monospace |
 
-### Fluid Typography Formulas
-Instead of rigid pixel steps, headings scale continuously with the browser viewport using CSS `clamp()`:
+---
 
-```css
-/* Hero Headline: Min 1.75rem (28px), Scaled 4vw, Max 3.25rem (52px) */
-h1.hero-title {
-  font-size: clamp(1.75rem, 4vw + 1rem, 3.25rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
+## 4. Layout Floor Plan & 2D Grid
 
-/* Section Subtitles */
-h2.section-title {
-  font-size: clamp(1.25rem, 2.5vw + 0.5rem, 2rem);
-  line-height: 1.25;
-}
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│  NAVIGATION BAR (Brand Identity, Status Indicator, Theme Toggler)      │
+├───────────────────────────────────┬────────────────────────────────────┤
+│  LEFT COLUMN (40% Desktop)        │  RIGHT COLUMN (60% Desktop)        │
+│                                   │                                    │
+│  [Hero Panel]                     │  [Qualification Badge Creator]     │
+│  - Industrial Clearance Tag       │  - Full Name & Email Inputs        │
+│  - Live Typewriter Terminal       │  - Clearance Tier Selector         │
+│  - System Mission Statement       │  - Engineering Track Selector      │
+│                                   │  - Interactive Skill Checkboxes    │
+│  [System Pulse & Vitals]          │  - "Issue Credential" Action       │
+│  - Server Health & Latency Radar  │                                    │
+│  - Database Mode Badge            │  [Verified Badges Showcase]        │
+│  - Memory Footprint (RSS / Heap)  │  - Filter Pills (All, Tiers)       │
+│                                   │  - Real-Time Search Bar            │
+│  [Internship Roadmap (Page 12)]   │  - Badge Cards Grid (Flip & Tilt)  │
+│  - 6 Development Milestones       │  - Revoke / Delete Actions         │
+│  - Persistent Completion Check    │                                    │
+│                                   │  [Interactive API Sandbox Console] │
+│  [Survival Toolkit Modal Drawer]  │  - Status Code Simulator (400-500) │
+│  - Git Workflows & Cheat-Sheets   │  - Payload Echo Tester             │
+├───────────────────────────────────┴────────────────────────────────────┤
+│  FOOTER (Official DecodeLabs Details, Verification Timestamp, GitHub)  │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 4. Layout Architecture & Floor Plan
+## 5. The Golden Rule of Mobile Zero-Overflow
 
-The application layout uses an asymmetric 2D CSS Grid structure:
+### The Classic Web Developer Pitfall
+Beginner and automated layouts frequently break on mobile screens (< 480px) because of CSS Grid's implicit track sizing behavior:
+- When a grid track is defined as `repeat(auto-fit, minmax(280px, 1fr))`, or when elements use `minmax(auto, 1fr)`, any unbreakable string (e.g. long email `ahmed.iqbal@decodelabs.dev`, long skill pills, or code snippets) forces the track wider than the device viewport.
+- This creates an ugly, unprofessional horizontal scrollbar.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│  NAVIGATION & BRAND BAR (Logo, System Status, Theme Toggle)           │
-├───────────────────────────────────┬────────────────────────────────────┤
-│  LEFT COLUMN (40% Desktop)        │  RIGHT COLUMN (60% Desktop)        │
-│                                   │                                    │
-│  - Hero Intro Badge               │  - Interactive Credential Creator  │
-│  - Live Typewriter Terminal       │    (Name, Email, Tier, Skills)     │
-│  - System Telemetry & Uptime      │                                    │
-│  - Real-Time Stats Strip          │  - Verified Badges Showcase Grid   │
-│    (Total Badges, Cloud Sync)     │    (Filter Pills, Badge Cards)     │
-├───────────────────────────────────┴────────────────────────────────────┤
-│  FOOTER & SECURITY BADGE (Architecture Verification, GitHub Sync)      │
-└────────────────────────────────────────────────────────────────────────┘
-```
+### The Architectural Solution Implemented
+In `frontend/css/chunks/mobile-nav.css` and `frontend/css/layout.css`:
 
-### The Golden Rule of Mobile Zero-Overflow
-A frequent failure mode in web development is the horizontal blowout bug on mobile viewports (< 480px). This occurs when:
-1. CSS Grid tracks are defined as `1fr` without specifying a minimum floor, defaulting to `minmax(auto, 1fr)`.
-2. Long email strings, URLs, or non-wrapping badge tags expand the grid track beyond the screen width.
-
-**The Architectural Fix Applied:**
 ```css
 @media (max-width: 768px) {
-  /* Force tracks to collapse down to 0 minimum width */
+  /* 1. Force grid tracks to collapse to 0 minimum floor */
   .grid-layout,
   .badges-grid,
-  .form-container {
+  .form-container,
+  .stats-strip {
     grid-template-columns: minmax(0, 1fr) !important;
     width: 100% !important;
     max-width: 100% !important;
   }
 
-  /* Force long text and pills to wrap naturally */
+  /* 2. Enforce word wrapping across all badges and tags */
   .badge-card,
   .action-pill,
-  .skill-tag {
+  .skill-pill,
+  .terminal-text {
     white-space: normal !important;
     word-break: break-word !important;
     overflow-wrap: anywhere !important;
+  }
+
+  /* 3. Scale stats strip into a 2x2 grid */
+  .stats-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.75rem !important;
   }
 }
 ```
 
 ---
 
-## 5. Micro-Interactions & Sensory Dynamics
+## 6. Micro-Interactions & Animation Physics
 
-| Interaction | Trigger | Visual Effect & CSS Physics |
+| Feature | CSS & Timing Specification | User Experience Objective |
 | :--- | :--- | :--- |
-| **Live Ambient Video** | Background | `position: fixed; inset: 0; pointer-events: none; z-index: 0;` ensures smooth 60fps video playback without blocking user clicks or selection. |
-| **Typewriter Cursor** | Ongoing Loop | Monospace terminal typing with a `blink 1s infinite step-end` cursor simulating real-time system connection. |
-| **Glass Card Hover** | Cursor Mouseover | Subtle elevation `-4px` translateY with accent border glow `box-shadow: 0 12px 32px var(--glass-glow);`. |
-| **Toast Notifications** | API Event | Slides in from top-right with cubic-bezier bounce physics, auto-dismissing after 3500ms. |
-| **Theme Toggle** | Click Button | Smooth 250ms color transition across all CSS variables without page reloading. |
+| **Atmospheric Video Layer** | `position: fixed !important; inset: 0 !important; pointer-events: none !important; z-index: 0 !important;` | Renders a cinematic 60fps moving background without interfering with mouse clicks or form focus. |
+| **Terminal Typewriter** | `100ms` typing, `50ms` backspacing, `2000ms` pause | Simulates live clearance authorization from a remote server. |
+| **Glass Card Hover Elevation** | `transform: translateY(-4px); box-shadow: 0 16px 36px var(--glass-glow); transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);` | Gives interactive feedback indicating that the card is elevated in 3D space. |
+| **System Pulse Radar** | `animation: radarPulse 2s infinite ease-out;` | Signals live backend telemetry polling. |
+| **Toast Alerts** | Slide-in from top right with `cubic-bezier(0.34, 1.56, 0.64, 1)` spring bounce, auto-dismissing after 3500ms. | Delivers clear non-blocking feedback for success and validation errors. |
