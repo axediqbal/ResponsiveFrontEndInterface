@@ -109,10 +109,11 @@ function writeBadges(badges) {
 
 /**
  * GET /api/badges
- * List all badges with optional filtering
+ * List all badges with optional filtering (combines Cloud + Local Vault)
  */
 export async function getAllBadges(req, res) {
   const { tier, search } = req.query;
+  const localBadges = readBadges();
 
   // 1. Try Supabase Cloud Database if configured
   if (supabase) {
@@ -122,7 +123,17 @@ export async function getAllBadges(req, res) {
 
       const { data, error } = await withTimeout(query, 3500);
       if (!error && Array.isArray(data)) {
-        let filtered = data.map(normalizeBadge);
+        let cloudBadges = data.map(normalizeBadge);
+
+        // Deduplicated union: Cloud badges + local badges
+        const combined = [...cloudBadges];
+        localBadges.forEach(lb => {
+          if (!combined.some(b => b.id.toUpperCase() === lb.id.toUpperCase())) {
+            combined.push(lb);
+          }
+        });
+
+        let filtered = combined;
         if (search) {
           const term = search.toLowerCase();
           filtered = filtered.filter(b => 
@@ -135,7 +146,7 @@ export async function getAllBadges(req, res) {
           status: 200,
           provider: 'supabase-cloud',
           count: filtered.length,
-          totalInVault: data.length,
+          totalInVault: combined.length,
           data: filtered,
           timestamp: new Date().toISOString()
         });
@@ -146,8 +157,7 @@ export async function getAllBadges(req, res) {
   }
 
   // 2. Fallback to Local JSON Vault
-  const badges = readBadges();
-  let filtered = [...badges];
+  let filtered = [...localBadges];
 
   if (tier) {
     filtered = filtered.filter(b => b.tier.toLowerCase() === tier.toLowerCase());
@@ -166,7 +176,7 @@ export async function getAllBadges(req, res) {
     status: 200,
     provider: 'local-vault',
     count: filtered.length,
-    totalInVault: badges.length,
+    totalInVault: localBadges.length,
     data: filtered,
     timestamp: new Date().toISOString()
   });
@@ -229,7 +239,7 @@ export async function getBadgeById(req, res) {
 
 /**
  * POST /api/badges
- * Create and persist a new qualification credential
+ * Create and persist a new qualification credential with multi-tier cloud fallbacks
  */
 export async function createBadge(req, res) {
   const { internName, tier, skills, email, clearanceLevel } = req.sanitizedBody || req.body;
@@ -259,8 +269,10 @@ export async function createBadge(req, res) {
     skills: assignedSkills
   };
 
-  // 1. Persist to Supabase if connected
+  // 1. Multi-tier adaptive persistence to Supabase Cloud
   let savedToCloud = false;
+  let cloudErrorMsg = null;
+
   if (supabase) {
     try {
       const basePayload = {
@@ -275,29 +287,55 @@ export async function createBadge(req, res) {
       };
 
       const doInsert = async () => {
-        // Try inserting with skills column first
-        let { error } = await supabase.from('badges').insert([{
-          ...basePayload,
-          skills: JSON.stringify(assignedSkills)
-        }]);
+        // Attempt 1: Full payload with skills JSON
+        try {
+          const r1 = await supabase.from('badges').insert([{
+            ...basePayload,
+            skills: JSON.stringify(assignedSkills)
+          }]).select();
 
-        // If skills column is not in the schema, retry without it seamlessly
-        if (error && error.message && error.message.includes('skills')) {
-          const retry = await supabase.from('badges').insert([basePayload]);
-          error = retry.error;
+          if (!r1.error && Array.isArray(r1.data) && r1.data.length > 0) {
+            return { ok: true, data: r1.data[0] };
+          }
+          if (r1.error) console.warn('Supabase Attempt 1:', r1.error.message);
+        } catch (e1) {
+          console.warn('Supabase Attempt 1 ex:', e1.message);
         }
-        return error;
+
+        // Attempt 2: Without skills column
+        try {
+          const r2 = await supabase.from('badges').insert([basePayload]).select();
+          if (!r2.error && Array.isArray(r2.data) && r2.data.length > 0) {
+            return { ok: true, data: r2.data[0] };
+          }
+          if (r2.error) console.warn('Supabase Attempt 2:', r2.error.message);
+        } catch (e2) {
+          console.warn('Supabase Attempt 2 ex:', e2.message);
+        }
+
+        // Attempt 3: Standard insert without representation requirement
+        try {
+          const r3 = await supabase.from('badges').insert([basePayload]);
+          if (!r3.error) {
+            return { ok: true, data: basePayload };
+          }
+          return { ok: false, error: r3.error };
+        } catch (e3) {
+          return { ok: false, error: { message: e3.message } };
+        }
       };
 
-      const insertError = await withTimeout(doInsert(), 3500);
+      const result = await withTimeout(doInsert(), 4000);
 
-      if (!insertError) {
+      if (result && result.ok) {
         savedToCloud = true;
         console.log('✅ [SUPABASE] Badge inserted successfully to cloud table:', newCredentialId);
       } else {
-        console.error('❌ [SUPABASE INSERT ERROR]:', insertError.message || insertError);
+        cloudErrorMsg = result?.error?.message || 'Insert rejected by cloud table';
+        console.error('❌ [SUPABASE INSERT ERROR]:', cloudErrorMsg);
       }
     } catch (err) {
+      cloudErrorMsg = err.message;
       console.warn('⚠️ [SUPABASE TIMEOUT/ERROR]:', err.message);
     }
   }
@@ -309,11 +347,12 @@ export async function createBadge(req, res) {
   // Set Location header according to REST best practice
   res.setHeader('Location', `/api/badges/${newCredentialId}`);
 
-  // Return HTTP 201 Created
+  // Return HTTP 201 Created with informative status
   res.status(201).json({
     success: true,
     status: 201,
     provider: savedToCloud ? 'supabase-cloud' : 'local-vault',
+    cloudStatus: savedToCloud ? 'PERSISTED_TO_SUPABASE' : `LOCAL_VAULT (${cloudErrorMsg || 'pending cloud sync'})`,
     message: `Qualification credential successfully issued for ${internName}! 🛡️`,
     data: newBadge,
     timestamp: now

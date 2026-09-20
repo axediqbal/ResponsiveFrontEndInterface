@@ -34,6 +34,59 @@ export function initBadge() {
     });
   }
 
+  // Helper to render a badge into the ledger DOM
+  function renderBadgeCard(badge, prepend = false) {
+    if (!verifiedListContainer) return;
+
+    // Check if already rendered
+    const existing = verifiedListContainer.querySelector(`[data-badge-id="${badge.id}"]`);
+    if (existing) return;
+
+    // Remove empty placeholder if present
+    const placeholder = verifiedListContainer.querySelector('.empty-ledger-notice');
+    if (placeholder) placeholder.remove();
+
+    const item = document.createElement('div');
+    item.className = 'glass-card verified-badge-card';
+    item.setAttribute('data-badge-id', badge.id || '');
+    item.style.padding = '10px 14px';
+    item.style.marginBottom = '8px';
+    item.style.display = 'flex';
+    item.style.justifyContent = 'space-between';
+    item.style.alignItems = 'center';
+    item.style.flexWrap = 'wrap';
+    item.style.gap = '8px';
+    item.style.fontSize = '13px';
+
+    const name = badge.internName || badge.intern_name || 'Verified Intern';
+    const tier = badge.tier || 'Gold';
+    const id = badge.id || 'DL-2026';
+    const rawDate = badge.issuedAt || badge.issued_at;
+    const displayDate = rawDate ? new Date(rawDate).toLocaleDateString() : new Date().toLocaleDateString();
+
+    const tierLower = tier.toLowerCase();
+    const tierColor = tierLower.includes('plat') ? '#c084fc' :
+                      tierLower.includes('gold') ? '#fbbf24' :
+                      tierLower.includes('silver') ? '#94a3b8' :
+                      tierLower.includes('architect') ? '#38bdf8' : '#34d399';
+
+    item.innerHTML = `
+      <div>
+        <strong style="color:var(--color-ethereal-300); font-size:14px;">${name}</strong>
+        <div style="color:rgba(255,255,255,0.5); font-family:var(--font-mono); font-size:11px;">${id} • ${displayDate}</div>
+      </div>
+      <span class="glass-pill" style="border-color:${tierColor}; color:${tierColor}; font-weight:700;">
+        ${tier}
+      </span>
+    `;
+
+    if (prepend && verifiedListContainer.firstChild) {
+      verifiedListContainer.insertBefore(item, verifiedListContainer.firstChild);
+    } else {
+      verifiedListContainer.appendChild(item);
+    }
+  }
+
   // Load verified badges from Backend API (GET /api/badges)
   function loadVerifiedBadges() {
     if (!verifiedListContainer) return;
@@ -53,46 +106,13 @@ export function initBadge() {
       .then(result => {
         if (!result.success || !Array.isArray(result.data)) return;
         
-        verifiedListContainer.innerHTML = '';
-        if (result.data.length === 0) {
-          verifiedListContainer.innerHTML = '<p style="color:var(--color-mocha-300); font-size:13px; padding:8px 0;">No credentials registered yet. Click "Claim Credential" above to create one! 🛡️</p>';
+        if (result.data.length === 0 && verifiedListContainer.children.length === 0) {
+          verifiedListContainer.innerHTML = '<p class="empty-ledger-notice" style="color:var(--color-mocha-300); font-size:13px; padding:8px 0;">No credentials registered yet. Click "Claim Credential" above to create one! 🛡️</p>';
           return;
         }
 
         result.data.forEach(badge => {
-          const item = document.createElement('div');
-          item.className = 'glass-card verified-badge-card';
-          item.style.padding = '10px 14px';
-          item.style.marginBottom = '8px';
-          item.style.display = 'flex';
-          item.style.justifyContent = 'space-between';
-          item.style.alignItems = 'center';
-          item.style.flexWrap = 'wrap';
-          item.style.gap = '8px';
-          item.style.fontSize = '13px';
-
-          const name = badge.internName || badge.intern_name || 'Verified Intern';
-          const tier = badge.tier || 'Gold';
-          const id = badge.id || 'DL-2026';
-          const rawDate = badge.issuedAt || badge.issued_at;
-          const displayDate = rawDate ? new Date(rawDate).toLocaleDateString() : new Date().toLocaleDateString();
-
-          const tierLower = tier.toLowerCase();
-          const tierColor = tierLower.includes('plat') ? '#c084fc' :
-                            tierLower.includes('gold') ? '#fbbf24' :
-                            tierLower.includes('silver') ? '#94a3b8' :
-                            tierLower.includes('architect') ? '#38bdf8' : '#34d399';
-
-          item.innerHTML = `
-            <div>
-              <strong style="color:var(--color-ethereal-300); font-size:14px;">${name}</strong>
-              <div style="color:rgba(255,255,255,0.5); font-family:var(--font-mono); font-size:11px;">${id} • ${displayDate}</div>
-            </div>
-            <span class="glass-pill" style="border-color:${tierColor}; color:${tierColor}; font-weight:700;">
-              ${tier}
-            </span>
-          `;
-          verifiedListContainer.appendChild(item);
+          renderBadgeCard(badge, false);
         });
       })
       .catch(err => {
@@ -149,11 +169,17 @@ export function initBadge() {
           if (badgeIdDisplay && data.data) {
             badgeIdDisplay.textContent = data.data.id;
           }
-          const providerText = data.provider === 'supabase-cloud' ? ' ☁️ [Supabase Cloud]' : ' 💾 [Local Vault]';
+          const isCloud = data.provider === 'supabase-cloud';
+          const providerText = isCloud ? ' ☁️ [Supabase Cloud]' : ` 💾 [${data.cloudStatus || 'Local Vault'}]`;
           const event = new CustomEvent('app:toast', {
-            detail: { message: `✅ Credential Verified & Persisted! (ID: ${data.data?.id || 'DL-2026'})${providerText}` }
+            detail: { message: `✅ Credential Issued & Persisted! (ID: ${data.data?.id || 'DL-2026'})${providerText}` }
           });
           window.dispatchEvent(event);
+
+          // Instantly render card into ledger list in real time!
+          if (data.data) {
+            renderBadgeCard(data.data, true);
+          }
           loadVerifiedBadges();
           window.dispatchEvent(new CustomEvent('badges:updated'));
         } else {

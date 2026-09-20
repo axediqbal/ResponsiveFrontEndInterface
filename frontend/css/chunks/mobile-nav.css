@@ -1,879 +1,484 @@
 /* ==========================================================================
-   DECODELABS RESPONSIVE & MOBILE NAVIGATION DOCK CHUNK
-   Scoped to Mobile Viewports & Native Bottom Dock
+   DECODELABS RESPONSIVE & MOBILE NAVIGATION ARCHITECTURE
+   Guarantees 100% Fluid Adaptation on Phones, Tablets, & Narrow Desktop Windows
    ========================================================================== */
 
-/* ==========================================================================
-   COMPREHENSIVE MOBILE & LAPTOP RESPONSIVE OPTIMIZATIONS
-   ========================================================================== */
+/* -------------------------------------------------------------------------
+   1. GLOBAL OVERFLOW & FLUID BOX SIZING
+   ------------------------------------------------------------------------- */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
 
-/* ---- All Phones & Small Tablets (up to 768px) ---- */
-@media (max-width: 768px) {
-  /* Global overflow guard */
-  .site-wrapper,
-  .app-layout-grid,
-  .main-content,
-  .section-block,
-  .hero-wrapper,
-  .hero-content,
-  .simulator-card,
-  .vscode-simulator,
-  .badge-portal-wrapper {
-    max-width: 100%;
-    overflow-x: clip;
-    box-sizing: border-box;
-  }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-  /* Navbar: Modern iOS Bottom Dock (Flush Edge-to-Edge) */
-  .nav-header {
-    position: fixed !important;
-    top: auto !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    padding: 0 !important;
-    z-index: var(--z-navbar, 1000) !important;
-    pointer-events: none;
-    margin: 0;
-    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
+.site-wrapper,
+.app-layout-grid,
+.main-content,
+.section-block,
+.hero-wrapper,
+.hero-content,
+.simulator-card,
+.vscode-simulator,
+.badge-portal-wrapper,
+.api-console-card {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
 
-  /* Auto-hide when scrolling down: glides smoothly off-screen */
-  .nav-header.nav-hidden {
-    transform: translateY(115%) !important;
-  }
+/* -------------------------------------------------------------------------
+   2. STICKY TOP DYNAMIC ISLAND NAVBAR (ALL DEVICES & WINDOW SIZES)
+   Consistently at the top with smooth dropdown on mobile & thin screens
+   ------------------------------------------------------------------------- */
+.nav-header {
+  position: sticky !important;
+  top: 10px !important;
+  bottom: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  padding-inline: clamp(8px, 2.5vw, 24px) !important;
+  margin: 0 auto;
+  z-index: var(--z-navbar, 1000) !important;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
+}
 
-  .nav-island {
-    pointer-events: auto;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0.65rem 1rem max(10px, env(safe-area-inset-bottom)) 1rem;
-    border-radius: 20px 20px 0 0;
-    background: rgba(6, 10, 22, 0.98);
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
-    border-top: 1px solid rgba(0, 240, 255, 0.3);
-    border-bottom: none;
-    border-left: none;
-    border-right: none;
-    box-shadow: 0 -12px 35px -5px rgba(0, 0, 0, 0.92), 0 -2px 15px rgba(0, 240, 255, 0.1);
-  }
+.nav-header.nav-hidden {
+  transform: translateY(-120%) !important;
+}
 
-  .nav-header.is-scrolled .nav-island {
-    padding: 0.55rem 1rem max(10px, env(safe-area-inset-bottom)) 1rem;
-    background: rgba(4, 8, 18, 0.99);
-  }
+.nav-island {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--container-max, 1340px);
+  margin: 0 auto;
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(8, 12, 22, 0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.7), 0 0 15px rgba(160, 212, 224, 0.08);
+  position: relative;
+  transition: all 0.25s ease;
+}
 
-  .brand-icon-wrapper {
-    width: 32px;
-    height: 32px;
-    font-size: 0.85rem;
-  }
+.nav-header.is-scrolled .nav-island {
+  background: rgba(6, 9, 18, 0.98);
+  box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.85), 0 0 20px rgba(0, 240, 255, 0.12);
+  border-color: rgba(160, 212, 224, 0.25);
+}
 
-  .brand-title {
-    font-size: 0.88rem;
-  }
+/* Mobile Dropdown Drawer (Smooth Slide Down from Top Island) */
+.mobile-nav-menu {
+  position: absolute !important;
+  top: calc(100% + 10px) !important;
+  bottom: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-height: calc(85vh - 70px) !important;
+  overflow-y: auto !important;
+  border-radius: 18px !important;
+  background: rgba(6, 10, 20, 0.98) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(160, 212, 224, 0.3) !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.95), 0 0 25px rgba(0, 240, 255, 0.15) !important;
+  padding: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-8px) scale(0.98) !important;
+  transition: opacity 0.24s ease, transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  z-index: 1001 !important;
+}
 
-  .brand-title .badge-mini {
-    display: none;
-  }
+.mobile-nav-menu.open {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0) scale(1) !important;
+}
 
-  .brand-sub {
-    font-size: 0.65rem;
-  }
+.mobile-nav-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 11px 16px !important;
+  border-radius: 12px !important;
+  color: var(--text-primary, #ffffff) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+  transition: background 0.2s ease, color 0.2s ease !important;
+}
 
-  .icon-btn {
-    width: 34px;
-    height: 34px;
-  }
+.mobile-nav-link:hover,
+.mobile-nav-link:active {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-ethereal-300, #a0d4e0) !important;
+}
 
-  .nav-controls {
-    gap: 4px;
-  }
-
-  /* Mobile menu: opens upwards from bottom dock like iOS bottom sheet */
-  .mobile-nav-menu {
-    position: absolute;
-    top: auto;
-    bottom: 100%;
-    left: 0;
-    right: 0;
-    max-height: calc(75vh - 70px);
-    overflow-y: auto;
-    border-radius: 20px 20px 0 0;
-    transform: translateY(14px);
-    background: rgba(6, 10, 22, 0.99);
-    backdrop-filter: blur(32px) saturate(190%);
-    -webkit-backdrop-filter: blur(32px) saturate(190%);
-    border-top: 1px solid rgba(0, 240, 255, 0.35);
-    border-left: none;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 -16px 45px -8px rgba(0, 0, 0, 0.95);
-  }
-
-  /* ---- HERO: critical overflow fix ---- */
-  .hero-wrapper {
-    padding-block: var(--space-md) var(--space-lg);
-    gap: var(--space-md);
-  }
-
-  .hero-content {
-    max-width: 100%;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .hero-pill-cluster {
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .hero-title {
-    font-size: clamp(1.5rem, 5.5vw, 2.2rem);
-    line-height: 1.15;
-    word-break: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .hero-desc {
-    font-size: var(--text-sm);
-    max-width: 100%;
-  }
-
-  .hero-actions {
-    gap: var(--space-xs);
-  }
-
-  .hero-actions .btn-glass {
-    width: 100%;
-    justify-content: center;
-    padding: 0.7rem 1rem;
-  }
-
-  .hero-stats-strip {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-sm);
-  }
-
-  .stat-card {
-    padding: var(--space-sm);
-  }
-
-  .stat-value {
-    font-size: var(--text-lg);
-  }
-
-  .stat-label {
-    font-size: 0.65rem;
-  }
-
-  /* Simulator: compact */
-  .simulator-card {
-    padding: var(--space-md);
-    border-radius: var(--radius-lg);
-  }
-
-  .simulator-toolbar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-xs);
-  }
-
-  .viewport-switchers {
-    overflow-x: auto;
-    max-width: 100%;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .viewport-switchers::-webkit-scrollbar {
-    display: none;
-  }
-
-  .viewport-btn {
-    padding: 5px 10px;
-    font-size: 0.7rem;
-  }
-
-  .viewport-btn svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .viewport-badge {
-    font-size: 0.65rem;
-  }
-
-  .simulator-stage {
-    min-height: 280px;
-    padding: var(--space-sm);
-  }
-
-  .frame-topbar {
-    padding: 6px 10px;
-    font-size: 0.6rem;
-  }
-
-  .frame-topbar span:nth-child(2) {
-    max-width: 160px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .frame-topbar span:nth-child(3) {
-    display: none;
-  }
-
-  .frame-content {
-    padding: var(--space-sm);
-  }
-
-  /* VS Code Simulator: stack and compact */
-  .vscode-header {
-    padding: 8px 10px;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .vscode-tab {
-    font-size: 0.7rem;
-    padding: 4px 10px;
-    gap: 5px;
-  }
-
-  .shortcut-buttons-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-xs);
-    padding: var(--space-sm);
-  }
-
-  .shortcut-key-btn {
-    padding: 8px 10px;
-    font-size: 0.78rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .shortcut-key-btn kbd {
-    font-size: 0.7rem;
-    min-width: auto;
-  }
-
-  .vscode-terminal {
-    padding: var(--space-sm);
-    font-size: 0.72rem;
-    min-height: 140px;
-    max-height: 200px;
-  }
-
-  .terminal-line {
-    gap: 5px;
-  }
-
-  .terminal-prompt {
-    font-size: 0.68rem;
-    white-space: nowrap;
-  }
-
-  /* Vault: scrollable tabs */
-  .vault-nav-tabs {
-    gap: 6px;
-    padding-bottom: 6px;
-    scrollbar-width: none;
-  }
-
-  .vault-nav-tabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .vault-tab {
-    padding: 0.5rem 0.9rem;
-    font-size: 0.72rem;
-  }
-
-  .vault-resource-card {
-    padding: var(--space-md);
-  }
-
-  /* Roadmap: stack progress bar */
-  .roadmap-progress-container {
-    flex-direction: column;
-    gap: var(--space-sm);
-    text-align: center;
-    padding: var(--space-sm);
-  }
-
-  .progress-bar-track {
-    width: 100%;
-    margin-inline: 0;
-    height: 8px;
-  }
-
-  .roadmap-step-card {
-    padding: var(--space-sm);
-  }
-
-  .step-card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-xs);
-  }
-
-  .step-card-header h3 {
-    font-size: var(--text-sm) !important;
-  }
-
-  .checkbox-toggle {
-    align-self: flex-end;
-  }
-
-  /* Badge: compact */
-  .badge-portal-wrapper {
-    gap: var(--space-lg);
-  }
-
-  .badge-interactive-card {
-    padding: var(--space-lg) var(--space-md);
-    max-width: 100%;
-  }
-
-  .badge-icon-hologram {
-    width: 64px;
-    height: 64px;
-    font-size: 1.7rem;
-  }
-
-  .badge-intern-name {
-    font-size: var(--text-xl);
-  }
-
-  .badge-meta-row {
-    flex-direction: column;
-    gap: var(--space-sm);
-    text-align: left;
-  }
-
-  .input-glass {
-    padding: 0.65rem 0.85rem;
-  }
-
-  /* Footer: stack everything */
-  .site-footer {
-    padding-block: var(--space-xl) var(--space-md);
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    text-align: center;
-    gap: var(--space-sm);
-  }
-
-  /* Floating dock tray hidden on mobile to avoid colliding with bottom navbar */
-  .floating-dock-tray {
+/* -------------------------------------------------------------------------
+   3. RESPONSIVE BREAKPOINT: TABLET & THIN WINDOWS (< 1080px)
+   ------------------------------------------------------------------------- */
+@media (max-width: 1079px) {
+  .nav-links {
     display: none !important;
   }
 
-  /* Toast: position above bottom dock on mobile */
-  .toast-container {
-    bottom: calc(82px + env(safe-area-inset-bottom));
-    right: 0.75rem;
-    left: 0.75rem;
+  .hamburger-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
   }
 
-  .toast {
-    font-size: var(--text-xs);
-    padding: 10px 14px;
+  .brand-sub {
+    font-size: 0.68rem;
+  }
+}
+
+/* Desktop Navbar (> 1080px) */
+@media (min-width: 1080px) {
+  .nav-links {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
   }
 
-  /* === Deep Mobile Fixes: Inline-Style Overrides === */
+  .hamburger-btn {
+    display: none !important;
+  }
 
-  /* Simulator inner mini-app grid: force stack */
-  .frame-content [style*="grid-template-columns"] {
+  .mobile-nav-menu {
+    display: none !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   4. MACRO LAYOUT COLLAPSE (< 1024px)
+   ------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .sidebar-dock {
+    display: none !important;
+  }
+
+  .app-layout-grid {
     grid-template-columns: 1fr !important;
-    gap: 8px !important;
+    padding-inline: clamp(12px, 3vw, 24px) !important;
+    gap: var(--space-xl) !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   5. MOBILE & NARROW SCREENS (< 768px)
+   ------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .app-layout-grid {
+    gap: var(--space-lg) !important;
+    padding-inline: 10px !important;
+    padding-block: 8px var(--space-2xl) !important;
   }
 
-  /* Simulator inner header bar wrap */
-  .frame-content [style*="justify-content: space-between"] {
-    flex-wrap: wrap !important;
-    gap: 6px !important;
+  .main-content {
+    gap: var(--space-xl) !important;
   }
 
-  .frame-content [style*="font-size: var(--text-sm)"] {
-    font-size: 0.72rem !important;
+  .section-block {
+    gap: var(--space-md) !important;
+    padding-block: var(--space-sm) !important;
   }
 
-  .frame-content .glass-card {
-    padding: 8px !important;
+  /* Section Title scaling */
+  .section-header .section-title {
+    font-size: clamp(1.4rem, 5vw, 1.9rem) !important;
   }
 
-  .frame-content .glass-card h4 {
-    font-size: 0.78rem !important;
+  .section-header .section-desc {
+    font-size: 0.88rem !important;
+    max-width: 100% !important;
   }
 
-  .frame-content .glass-card p {
-    font-size: 0.68rem !important;
+  /* Hero Section */
+  .hero-wrapper {
+    padding-block: var(--space-sm) var(--space-lg) !important;
+    gap: var(--space-md) !important;
   }
 
-  /* Roadmap step: inner flex area wraps cleanly */
-  .step-card-header > div[style*="display: flex"] {
-    gap: 8px !important;
-    min-width: 0;
+  .hero-title,
+  .hero-typewriter-container {
+    font-size: clamp(1.4rem, 5.2vw, 2.2rem) !important;
+    line-height: 1.2 !important;
+    min-height: 70px !important;
+    word-break: break-word !important;
   }
 
-  .step-card-header > div[style*="display: flex"] > div {
-    min-width: 0;
+  .hero-desc {
+    font-size: 0.88rem !important;
+    line-height: 1.55 !important;
+    max-width: 100% !important;
   }
 
-  .step-card-header span[style*="font-size: var(--text-xs)"] {
-    font-size: 0.68rem !important;
-    line-height: 1.4;
-    display: block;
-    word-break: break-word;
-  }
-
-  /* Badge action buttons: stack vertically */
-  .badge-portal-wrapper [style*="display: flex; gap: var(--space-sm)"] {
+  .hero-action-pills-row {
+    display: flex !important;
     flex-direction: column !important;
-  }
-
-  .badge-portal-wrapper [style*="flex: 1"] {
-    flex: none !important;
+    gap: 8px !important;
     width: 100% !important;
   }
 
-  /* Pillar cards: note boxes get tighter padding */
-  .content-article [style*="padding: 12px"] {
+  .action-pill-white,
+  .action-pill-outline {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 13px !important;
+    padding: 10px 14px !important;
+  }
+
+  .hero-stats-strip {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .stat-card {
+    padding: 10px 12px !important;
+  }
+
+  .stat-value {
+    font-size: 1.4rem !important;
+  }
+
+  .stat-label {
+    font-size: 0.72rem !important;
+  }
+
+  /* Simulator Toolbar & Controls */
+  .simulator-card {
+    padding: 12px !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  .simulator-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .viewport-switchers {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 4px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    padding: 4px !important;
+  }
+
+  .viewport-btn {
+    flex: 1 1 calc(50% - 4px) !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+  }
+
+  .viewport-badge {
+    font-size: 0.72rem !important;
+    text-align: center !important;
+  }
+
+  .simulator-stage {
+    min-height: 320px !important;
     padding: 8px !important;
-    font-size: 0.7rem !important;
   }
 
-  /* Vault heading sizes on mobile */
-  .vault-resource-card h4 {
-    font-size: var(--text-base) !important;
+  .device-frame.mode-mobile {
+    max-width: 100% !important;
+    border-width: 4px !important;
+    border-radius: 18px !important;
   }
 
-  /* Select dropdown fix */
-  .input-glass[style*="background"] {
-    appearance: auto;
-    -webkit-appearance: auto;
-  }
-
-  /* Footer brand row */
-  .footer-brand [style*="display: flex; align-items: center"] {
+  /* VS Code Simulator */
+  .shortcut-buttons-grid {
+    grid-template-columns: 1fr !important;
     gap: 6px !important;
+    padding: 10px !important;
   }
 
-  /* ---- Week 2 Nervous System Mobile Optimization ---- */
+  .shortcut-key-btn {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+
+  /* Pillars (Curriculum Cards) */
+  .grid-2col,
+  .grid-3col {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  /* Roadmap Progress */
+  .roadmap-progress-container {
+    flex-direction: column !important;
+    gap: 10px !important;
+    text-align: center !important;
+    padding: 12px !important;
+  }
+
+  .progress-bar-track {
+    width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
+  .step-card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* Badge Portal: Form and 3D Card Stack */
+  .badge-portal-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--space-lg) !important;
+    width: 100% !important;
+  }
+
+  .badge-interactive-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 20px 16px !important;
+  }
+
+  .badge-icon-hologram {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 1.6rem !important;
+  }
+
+  .badge-intern-name {
+    font-size: 1.3rem !important;
+  }
+
+  .badge-portal-wrapper [style*="display: flex; gap: var(--space-sm)"] {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .badge-portal-wrapper [style*="flex: 1"] {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  /* The Nervous System API Console */
   .api-console-card {
-    padding: var(--space-md) !important;
-    gap: var(--space-sm);
+    padding: 14px !important;
   }
 
   .api-control-bar {
-    grid-template-columns: 1fr !important;
-    gap: 8px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
   }
 
-  .api-method-select,
-  .api-path-input {
-    width: 100%;
-    font-size: 13px;
-    padding: 8px 12px;
-  }
-
-  .api-preset-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-  }
-
-  .api-preset-select {
-    width: 100%;
-    font-size: 12px;
+  .api-control-bar select,
+  .api-control-bar input,
+  .api-control-bar button {
+    width: 100% !important;
   }
 
   .api-workspace-grid {
     grid-template-columns: 1fr !important;
-    gap: 12px;
-  }
-
-  .api-payload-editor,
-  .api-response-panel {
-    height: 180px;
-    font-size: 12px;
-    padding: 10px;
+    gap: 12px !important;
   }
 
   .nervous-vitals-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 8px !important;
-    margin-bottom: var(--space-md);
-  }
-
-  .vital-card {
-    padding: 10px !important;
-  }
-
-  .vital-value {
-    font-size: 1.15rem !important;
-  }
-
-  .vital-label {
-    font-size: 0.65rem !important;
-  }
-
-  .ecg-canvas-container {
-    height: 70px;
-    margin-top: 8px;
   }
 
   .nervous-pillars-grid {
     grid-template-columns: 1fr !important;
-    gap: var(--space-sm);
+    gap: 10px !important;
   }
 
-  .nervous-feature-card {
-    padding: var(--space-md) !important;
+  /* Floating Tray on Mobile */
+  .floating-dock-tray {
+    display: none !important;
   }
 
-  .verified-interns-list {
-    max-height: 220px;
+  /* Toasts */
+  .toast-container {
+    right: 10px !important;
+    left: 10px !important;
+    bottom: 24px !important;
+    align-items: center !important;
   }
 
-  .verified-badge-card {
-    padding: 10px 12px !important;
-  }
-
-  /* ---- Retro-Futurist Hero Mobile Optimization ---- */
-  .blurred-intro-badge {
-    font-size: 13.5px;
-    line-height: 1.4;
-    filter: blur(1.5px);
-    margin-bottom: var(--space-sm);
-  }
-
-  .hero-typewriter-container {
-    font-size: clamp(17px, 5.2vw, 24px);
-    line-height: 1.35;
-    min-height: 80px;
-    margin-bottom: var(--space-sm);
-  }
-
-  .hero-action-pills-row {
-    gap: 8px;
-    margin-top: var(--space-sm);
-    width: 100%;
-  }
-
-  .action-pill-white {
-    font-size: 12.5px;
-    padding: 8px 14px;
-    min-height: 40px;
-  }
-
-  .action-pill-outline {
-    font-size: 12px;
-    padding: 8px 12px;
-    min-height: 40px;
-    max-width: 100%;
-    white-space: normal;
-    text-align: center;
-    word-break: break-word;
+  .toast {
+    font-size: 12px !important;
+    padding: 10px 14px !important;
+    width: 100% !important;
+    max-width: 420px !important;
+    text-align: center !important;
   }
 }
 
-/* Extra Small Smartphones (up to 480px) */
+/* -------------------------------------------------------------------------
+   6. EXTRA SMALL SMARTPHONES (< 480px)
+   ------------------------------------------------------------------------- */
 @media (max-width: 480px) {
   .nav-header {
-    bottom: 0 !important;
-    top: auto !important;
-    padding: 0 !important;
+    top: 6px !important;
+    padding-inline: 6px !important;
   }
 
   .nav-island {
-    padding: 0.55rem 0.75rem max(8px, env(safe-area-inset-bottom)) 0.75rem;
+    padding: 0.45rem 0.85rem !important;
   }
 
   .brand-icon-wrapper {
-    width: 28px;
-    height: 28px;
-    font-size: 0.78rem;
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.78rem !important;
   }
 
   .brand-title {
-    font-size: 0.8rem;
+    font-size: 0.8rem !important;
   }
 
   .brand-sub {
-    font-size: 0.6rem;
-  }
-
-  .hero-action-pills-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .action-pill-white,
-  .action-pill-outline {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-    font-size: 13px;
-    padding: 9px 14px;
-    border-radius: 9999px;
-    box-sizing: border-box;
-  }
-
-  .hero-stats-strip {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-
-  .stat-card {
-    padding: 8px;
-  }
-
-  .stat-value {
-    font-size: 1.1rem;
-  }
-
-  .stat-label {
-    font-size: 0.6rem;
-  }
-
-  .badge-interactive-card {
-    padding: 16px 12px;
-  }
-
-  .badge-icon-hologram {
-    width: 52px;
-    height: 52px;
-    font-size: 1.4rem;
-  }
-
-  .badge-intern-name {
-    font-size: 1.25rem;
+    display: none !important;
   }
 
   .nervous-vitals-grid {
     grid-template-columns: 1fr !important;
   }
-}
 
-/* ---- Touch Screen & No-Hover Devices ---- */
-@media (hover: none) {
-  .blurred-intro-badge {
-    filter: blur(1.5px);
+  .badge-meta-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    text-align: center !important;
   }
 
-  .blurred-intro-badge:active {
-    filter: blur(0);
+  .verified-badge-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
   }
-
-  .glass-card:active,
-  .action-pill-white:active,
-  .action-pill-outline:active {
-    transform: scale(0.98);
-  }
-}
-
-/* ---- Tablets & Small Laptops (768px to 1023px) ---- */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .nav-header {
-    top: 12px;
-  }
-
-  .hero-title {
-    font-size: clamp(2.6rem, 5vw, 4rem);
-  }
-
-  .hero-stats-strip {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .simulator-stage {
-    min-height: 400px;
-  }
-
-  .shortcut-buttons-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .badge-portal-wrapper {
-    grid-template-columns: 1fr;
-  }
-
-  .badge-interactive-card {
-    max-width: 420px;
-  }
-}
-
-/* ---- Laptops (1024px to 1440px) ---- */
-@media (min-width: 1024px) and (max-width: 1440px) {
-  .nav-item-link {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.82rem;
-  }
-
-  .simulator-stage {
-    min-height: 440px;
-  }
-}
-
-/* ---- Touch Device Enhancements (44px minimum targets) ---- */
-@media (pointer: coarse) {
-  .icon-btn {
-    min-width: 44px;
-    min-height: 44px;
-  }
-
-  .nav-item-link {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-  }
-
-  .mobile-nav-link {
-    min-height: 48px;
-  }
-
-  .viewport-btn {
-    min-height: 40px;
-    padding: 8px 14px;
-  }
-
-  .shortcut-key-btn {
-    min-height: 48px;
-  }
-
-  .vault-tab {
-    min-height: 44px;
-  }
-
-  .custom-checkbox {
-    width: 24px;
-    height: 24px;
-  }
-
-  .checkbox-toggle {
-    min-height: 44px;
-    padding: 4px 0;
-  }
-}
-
-/* ---- Landscape phone orientation fix ---- */
-@media (max-height: 500px) and (orientation: landscape) {
-  .hero-wrapper {
-    padding-block: var(--space-sm) var(--space-md);
-  }
-
-  .hero-title {
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-  }
-
-  .simulator-stage {
-    min-height: 220px;
-  }
-
-  .vscode-terminal {
-    min-height: 100px;
-    max-height: 160px;
-  }
-}
-
-/* ==========================================================================
-   2026 LIVE AMBIENT CYBERNETIC VIDEO BACKGROUND (60FPS HARDWARE ACCELERATED)
-   ========================================================================== */
-.retro-background-video {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  object-position: center;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.88;
-  filter: brightness(0.95) contrast(1.12) saturate(1.15);
-  transform: translateZ(0);
-  will-change: transform;
-  transition: opacity var(--duration-normal) ease;
-}
-
-.video-vignette-overlay {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 35%, rgba(6, 9, 18, 0.12) 0%, rgba(6, 9, 18, 0.72) 100%),
-              linear-gradient(180deg, rgba(6, 9, 18, 0.45) 0%, transparent 25%, transparent 70%, rgba(6, 9, 18, 0.95) 100%);
-}
-
-[data-theme="light"] .retro-background-video {
-  opacity: 0.4;
-  filter: brightness(1.08) contrast(1.05);
-}
-
-[data-theme="light"] .video-vignette-overlay {
-  background: radial-gradient(circle at 50% 35%, rgba(244, 243, 238, 0.25) 0%, rgba(244, 243, 238, 0.85) 100%);
-}
-
-.blurred-intro-badge {
-  pointer-events: auto;
-  user-select: none;
-  margin-bottom: var(--space-md);
-  font-size: clamp(15px, 3.5vw, 20px);
-  line-height: 1.35;
-  font-weight: 500;
-  color: var(--text-primary);
-  filter: blur(3.5px);
-  cursor: default;
-  transition: filter var(--duration-normal) var(--ease-out);
-}
-
-.blurred-intro-badge:hover {
-  filter: blur(0px);
-}
-
-.hero-typewriter-container {
-  font-size: clamp(20px, 4.5vw, 34px);
-  line-height: 1.3;
-  font-weight: 700;
-  color: var(--text-primary);
-  min-height: 65px;
-  margin-bottom: var(--space-md);
-}
-
-.typewriter-cursor {
-  display: inline-block;
-  width: 3px;
-  height: 1em;
-  background-color: var(--accent-primary);
-  vertical-align: middle;
-  margin-left: 4px;
-  animation: cursorBlink 1s step-end infinite;
-}
-
-@keyframes cursorBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.hero-action-pills-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: var(--space-md);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
 }
